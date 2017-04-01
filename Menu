@@ -1,0 +1,33 @@
+//ejercio 1 practica 3
+#include <stdio.h>
+
+int main(){
+	char resp;
+	do{
+	
+	printf("\n1) Incorporar lector \n2) Agregar libro \n3) Expresar opinion \n4) Emitir voto \n0)Salir \n\nSiguiente comando?");
+	scanf(" %c",&resp);
+	switch(resp){
+		case '1':
+			printf("Has seleccionado incorporar lector.");
+			break;
+		case '2':
+			printf("Has seleccionado agregar libro.");
+			break;
+		case '3':
+			printf("Has seleccionado expresar opinion.");
+			break;	
+		case '4':
+			printf("Has seleccionado emitir voto.");
+	        break;
+	    case '0':
+			return 0;
+	        break;
+		default:
+			printf("Has realizado una seleccion no valida.");
+			break;
+	}
+}while(resp!='0');
+	
+return 0;
+}
