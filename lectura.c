@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+/*NOTA: NO USA EL FSCANF, LO HABRIA QUE MODIFICAR.*/
 int main()
 {
 	FILE *archivo;
