@@ -41,7 +41,16 @@ int leer( ){
 		leo= fscanf(archivo,":%i:",&num);
 		fgets(nombre,sizeof(nombre),archivo);
 		linea=strlen(nombre);
+		
+		if (nombre[linea-1]=='\0'){
+		
 		nombre[linea-2]='\0';
+		}
+	
+		else{
+			nombre[linea-1]='\0';
+		}
+		
 		lector[i].codigo=num;
 		strcpy(lector[i].nombre,nombre);
 		i++;
@@ -51,6 +60,8 @@ int leer( ){
     fclose(archivo);
 	return i;
 }
+
+
 
 
 
