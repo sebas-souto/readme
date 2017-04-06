@@ -50,7 +50,13 @@ int leer( ){
 		else{
 			nombre[linea-1]='\0';
 		}
-		
+		/*
+		AQUI LLAMAMOS LA FUNCION QUE CONFIRME QUE LA VARIABLE NOMBRE[] Y NUM CUMPLAN LOS REQUISITOS:
+	
+		*/
+	    
+	    
+	    
 		lector[i].codigo=num;
 		strcpy(lector[i].nombre,nombre);
 		i++;
