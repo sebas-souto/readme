@@ -1,21 +1,56 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+struct lectores{
+	int codigo;
+	char nombre[256];
+	
+};
 
-int main (int argc, char *argv[]){
-    int num=0;
+struct lectores lector[50000];
+
+ int leer();
+
+int main ( ){
+	int limite;
+	limite=leer();
+	int i=0;
+
+	for(i=0;i<limite-1;i++){
+		printf("%i %s \n",lector[i].codigo,lector[i].nombre);
+	}
+
+ return 0;
+}
+
+
+int leer( ){
+
+ 	int num=0;
+  	int leo,linea; 
     char nombre[256];
-    char apellido[256];
+    
+    
 	int i=0;
     FILE *archivo;
     archivo = fopen("lectores.txt", "r");
-    while(i!=5){
+    
+    
+    while(leo!=EOF){
 	
-	fscanf(archivo," :%i:%s %s:",&num,&nombre,&apellido);
-	printf(" %i %s %s\n",num,nombre,apellido);
-	i++;
+		leo= fscanf(archivo,":%i:",&num);
+		fgets(nombre,sizeof(nombre),archivo);
+		linea=strlen(nombre);
+		nombre[linea-2]='\0';
+		lector[i].codigo=num;
+		strcpy(lector[i].nombre,nombre);
+		i++;
 }
-    fclose(archivo);
 
-    }
+
+    fclose(archivo);
+	return i;
+}
+
+
 
