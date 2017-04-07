@@ -10,9 +10,15 @@ struct lectores{
 struct lectores lector[50000];
 
  int leer();
+ int existencia_fichero(char txt [256]);
 
 int main ( ){
-	int limite;
+	int limite,error;
+	error=existencia_fichero("lectores.txt");
+	if(error==0) {
+	printf("No existe el fichero\n");
+	return 0;
+	}
 	limite=leer();
 	int i=0;
 
@@ -67,6 +73,20 @@ int leer( ){
 	return i;
 }
 
+int	existencia_fichero(char txt [256]){
+	/*DEVUELVE 1 SI EXISTE EL FICHERO 0 SI NO EXISTE.*/
+	int existencia=1;
+	FILE *archivo;
+    archivo = fopen(txt, "r");
+    if(archivo){
+		return existencia;
+	}
+	else{
+		existencia =0;
+		return existencia;
+	}
+	
+}
 
 
 
