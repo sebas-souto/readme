@@ -1,3 +1,7 @@
+/*SE HAN AÑADIDO DOS FUNCIONES:
+1-EXISTENCIA DE FICHERO, COMPRUEBA SI UN TXT EXISTE O NO
+2-COMPROBACION DE FORMA: SOLO MIRA SI TIENEN LOS DOS PUNTOS, EL PRIMERO Y ULTIMO.
+OJO: NO MIRA LOS DOS PUNTOS DEL MEDIO!!!!*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,10 +17,15 @@ struct lectores lector[50000];
  int existencia_fichero(char txt [256]);
 
 int main ( ){
-	int limite,error;
+	int limite,error,error2;
 	error=existencia_fichero("lectores.txt");
 	if(error==0) {
 	printf("No existe el fichero\n");
+	return 0;
+	}
+	error2=formator_correcto();
+	if(error2==0) {
+	printf("Formato incorrecto\n");
 	return 0;
 	}
 	limite=leer();
@@ -88,6 +97,34 @@ int	existencia_fichero(char txt [256]){
 	
 }
 
+
+
+int	formator_correcto(){
+	int formato=1;
+	int existencia=1;
+	FILE *archivo;
+    archivo = fopen("lectores.txt", "r");
+	int leo=0,num,linea;
+	char nombre[256];
+	
+	
+	  while(leo!=EOF){
+	
+		leo= fscanf(archivo,":%i:",&num);
+		//printf("%i\n",leo);
+		if(leo==-1) return formato;
+		fgets(nombre,sizeof(nombre),archivo);
+	//	printf("%s\n",nombre);
+		linea=strlen(nombre);
+		if(leo!=1 ||nombre[linea-2]!=':' ) {
+		
+		return 0;
+		}
+		
+	}
+	
+	return formato;
+}
 
 
 
