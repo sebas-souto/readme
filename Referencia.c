@@ -1,4 +1,6 @@
 //Agregar referencia
+/*NOTA: QUEDA QUE IMPRIMA LA REFERENCIA INTRODUCIDA Y QUE LO AGREGUE A LA STRUCT.*/
+
 #include<stdio.h>
 #include<string.h>
 #define LONGITUD 50
@@ -21,6 +23,7 @@ void agregar_referencia(){
 	titulo();
 	anio();
 	tipo();
+	
 
 }
 
@@ -127,7 +130,7 @@ void confimar (int limite,char *pantalla){
 
 void imprimir(int linea){
 	char *errores[]={
-	/*0*/   "\nError de formato en un fichero: “Linea mal formada en el fichero (NOMBRE_FICHERO)\n\n",
+	/*0*/   "\nError de formato en un fichero: â€œLinea mal formada en el fichero (NOMBRE_FICHERO)\n\n",
 	/*1*/   "\nCaracter invalido\n\n",
 	/*2*/   "\nCadena vacia\n\n",
 	/*3*/   "\nLongitud de cadena excesivan\n\n",
