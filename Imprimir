@@ -1,0 +1,25 @@
+//Funcion imprimir.
+/*CUANDO QUERAMOS IMPRIMIR SIMPLIMENTE LLAMAMOS A LA FUNCION Y LE 
+PASAMOS LA LINEA QUE QUEREMOS IMPRIMIR.*/
+#include <stdio.h>
+void imprimir(int linea);
+int main(){
+	int i=0;
+	imprimir(5);
+	
+	return 0;
+}
+
+void imprimir(int linea){
+	char *errores[]={
+	/*0*/   "\nError de formato en un fichero: “Linea mal formada en el fichero (NOMBRE_FICHERO)\n",
+	/*1*/   "\nCaracter invalido\n",
+	/*2*/   "\nCadena vacia\n",
+	/*3*/   "\n\Longitud de cadena excesivan",
+	/*4*/   "\nLector repetido\n",
+	/*5*/ "\nValor seleccionado incorrecto\n",
+	/*6*/ "\nOperacion imposible en este momento\n",
+	};
+	
+	printf("%s",errores[linea]);
+}
