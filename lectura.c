@@ -1,3 +1,4 @@
+//LO HE PROBADO Y EN PRINCIPIO FUNCIONA 100%.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
