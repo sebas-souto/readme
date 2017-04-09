@@ -13,34 +13,31 @@ struct lectores{
 struct lectores lector[100];
 int incorporar_lector(int *limite);
 
-void codigo(char *cadena, int *pts,int *id);
+void obtener_codigo(char *cadena, int *pts,int *id);
 int leer_lector();
-void nombre(char *cadena, int *pts,int *id);
-int puntos(char *cadena,int *pts);
+void obtener_nombre(char *cadena, int *pts,int *id);
+int obtener_puntos(char *cadena,int *pts);
 int comprobar_lector(char nombre[50], int *tamanio);
 void asignar_id(char nombre[LONGITUD],int *limite);
 
-/*
-int leer_lector();
-int comprobar_lector(char nombre[50], int *tamanio);
-void asignar_id(char nombre[LONGITUD], int *limite);
- */
+
 
 int main(){
-	int limite,resultado,i;
+	int limite,resultado;
 	limite=leer_lector();
-	printf("---------Tabla----\n");
+	/*int i;
+	 * printf("---------Tabla------\n");
 	for (i = 0; i < limite; i++) {
-		printf("%s \n", lector[i].nombre);
-	}
+		printf("%s ---Codigo: %i\n", lector[i].nombre,lector[i].codigo);
+	}*/
 
 	resultado=incorporar_lector(&limite);//1 nuevo 0 repetido.
-	if(resultado==1) {
+	/*if(resultado==1) {
 		printf("---------Tabla actualizada----\n");
 		for (i = 0; i < limite; i++) {
 			printf("%s \n", lector[i].nombre);
 		}
-	}
+	}*/
 
 
  return 0;
@@ -93,7 +90,7 @@ int incorporar_lector (int *limite){
 			    else {
 					asignar_id(nombre,&tamanio);
 			   		*limite=tamanio;
-			   		printf("Lector %s: asignado %i\n",lector[tamanio].nombre,lector[tamanio].codigo);
+			   		printf("Lector %s: asignado %i\n",lector[tamanio-1].nombre,lector[tamanio].codigo);
 					resul=1;
 				}
 			    //ASIGNAMOS CODIGO REGISTRAMOS LECTOR IMPRIMIMOS LECTOR Y CODIGO	
@@ -109,10 +106,9 @@ int leer_lector(){
 
 	char cadena[256];
 	int pts[256];
-	int id=0,id2=0;
+	int id=0;
 	FILE *archivo;
 	archivo = fopen("lectores.txt", "r");
-	char a="";
 
 	while(fgets(cadena,sizeof(cadena),archivo)!=NULL){
 
@@ -122,9 +118,9 @@ int leer_lector(){
 		// printf("%s",cadena);
 		if(cadena[0]==':'){
 			// printf("%i :\n",id);
-			puntos(cadena,pts);
-			codigo(cadena,pts,&id);
-			nombre(cadena,pts,&id);
+			obtener_puntos(cadena,pts);
+			obtener_codigo(cadena,pts,&id);
+			obtener_nombre(cadena,pts,&id);
 			id++;
 		}
 
@@ -139,7 +135,7 @@ int leer_lector(){
 
 }
 
-void codigo(char *cadena, int *pts,int *id){
+void obtener_codigo(char *cadena, int *pts,int *id){
 	int num,x,p=0;
 	int y=*id;
 	char variable[10],cadena2[256];
@@ -160,34 +156,35 @@ void codigo(char *cadena, int *pts,int *id){
 	lector[y].codigo=num;
 }
 
-void nombre(char *cadena, int *pts,int *id){
+void obtener_nombre(char *cadena, int *pts,int *id){
 	int num = 0, x=0;
 	int y = *id;
-	char variable[80],cadena2[81];
+	char cadena2[81];
 	strcpy(cadena2, cadena);
 	cadena2[pts[3]] = '\0';
 
-
+	//printf("%s\n",cadena2);
 
 	for (x = pts[2]; x < pts[3]; x++) {
 		if (cadena2[x] != ':') {
-			variable[num] = cadena2[x];
+			cadena2[num] = cadena2[x];
 			num++;
 			// printf("%c",cadena2[x]);
 		}
 	}
-	//  printf("%s \n",variable);
-	strcpy(lector[y].nombre, variable);
+	cadena2[pts[3]-3] = '\0';
+	 //printf("%s \n",cadena2);
+	strcpy(lector[y].nombre, cadena2);
 }
 
-int puntos(char *cadena,int *pts){
+int obtener_puntos(char *cadena,int *pts){
 	int i=0, j=0;
 	//int pts[10];
 	for(i=0;i<strlen(cadena);i++){
 		if(cadena[i]==':'){
 			j++;
 			pts[j]=i;
-			//     printf("%i",i);
+			   //  printf("%i",i);
 		}
 	}
 	// printf("\n");
@@ -196,48 +193,22 @@ int puntos(char *cadena,int *pts){
 
 int comprobar_lector(char nombre[50], int *tamanio){
 	int limite=*tamanio;
-	int resultado=0,i,j,k;
+	int resultado,i;
 	//printf("limite comprobar lector: %i\n",limite);
 	for(i=0;i<limite;i++){//RECORREMOS LA STRUCT
-
-		k=0;
-		//printf("%s--%s\n",lector[i].nombre,nombre);
-		if(strlen(lector[i].nombre)!=strlen(nombre)){
-			i++;
-		}
-		else {
-			for (j = 0; j < strlen(lector[i].nombre); j++) {
-
-				if (lector[i].nombre[j] == nombre[j]) {
-					k++;
-				}
-				else {
-					i++;
-					resultado = 1;
-					//break;
-				}
-			}
-		}
-		if(k==strlen(lector[i].nombre)) {
-			resultado=0;
-			// return resultado;
-
-		}
-		else{
-			resultado=1;
-			// return resultado;
-		}
+		resultado= strcmp(nombre,lector[i].nombre);
+		//printf("%i\n",resultado);
+		if (resultado==0) break;
 
 	}
 	return resultado;
 }
 
 
-
 void asignar_id(char nombre[LONGITUD],int *limite){
 	int i=*limite;
 	i++;
-	strcpy(lector[i].nombre,nombre);
+	strcpy(lector[i-1].nombre,nombre);
 	lector[i].codigo=i;
 	*limite=i;
 	//printf("id:%i",i);
