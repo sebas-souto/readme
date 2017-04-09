@@ -1,4 +1,5 @@
-//Prototipo de array de struct para referencia.
+//Lee Referencia.txt y pone los datos en el struct
+//FUNCIONA PERO SE PUEDE MEJORAR.
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
