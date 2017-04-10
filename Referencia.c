@@ -1,4 +1,4 @@
-//Prototipo de array de struct para referencia.
+//LECTURA DE REFENCIA.TXT TOTALMENTE FUNCIONAL.
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
