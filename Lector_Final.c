@@ -1,3 +1,5 @@
+//FUNCIONES LEER LECTOR, INCOMPORTAR LECTOR Y ACTUALIZAR TXT.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
