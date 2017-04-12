@@ -1,4 +1,6 @@
-//Prototipo de array de struct para referencia.
+//SOLO FALTA CALCULAR 
+/*HABRIA A MAYORES QUE COMPROBAR EL CORRECTO FUNCIONAMIENTO DE TODAS LAS FUNCIONES, ES DECIR PARA DIRENTES ENTRADAS SI 
+DA LO QUE TIENE QUE DAR.*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
