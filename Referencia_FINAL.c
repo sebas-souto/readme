@@ -1,4 +1,4 @@
-//Prototipo de array de struct para referencia.
+//AGREGAR REFERENCIA--LEER REFERENCIA TXT  Y ACTUALIZA TXT----
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
