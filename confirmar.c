@@ -1,6 +1,9 @@
 //CONFIRMAR
 #include <stdio.h>
 
+/*FALTA VERIFICAR EL CORRECTO FORMATO DE LOS TXT
+EL ELSE IF (1==0) DEBERA EJECUTARSE CUANDO EL FORMATO NO SEA VALIDO*/
+
 int main(){
 	int comprobar=comprobacion();
 	if (comprobar==1)
