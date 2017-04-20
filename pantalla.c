@@ -1,54 +1,88 @@
 //TITULO MENU & CONFIRMACION SALIDA
 #include <stdio.h>
 #include <ctype.h>
-#include "pantalla.h"
 
-int main (){
-	char selec='1';
+void pantalla();
+int confirmar();
+void titulo();
+void lados (int);
+void base ();
+
+int main(){
+	pantalla();	
+	return 0;
+}
+
+void pantalla (){
+	char selec, cadena[256];
 	
 	titulo(); //IMPRIMIMOS LA CARTULA
 	
-	while (selec!='0'){
-		
-		printf("\n1) Incorporar lector\n2) Agregar referencia\n3) Expresar opinion\n4) Obtener informe\n5) Emitir voto\n6) Calcular nota\n0) Salir\n\nSiguiente comando? ");
-		fscanf(stdin," %c",&selec);	
+	do{		
+		printf("\n1) Incorporar lector\n2) Agregar referencia\n3) Expresar opinion\n4) Obtener informe\n5) Emitir voto\n6) Calcular nota\n7) Listar referencias\n8) Buscar referencias\n9) Cambiar lector\n0) Salir\n\nSiguiente comando? ");
+		fgets(cadena,sizeof(cadena),stdin);		
+		if (cadena[1]!='\n')
+		cadena[0]='a';
+	//	selec=atoi(cadena);	
 
-		switch (selec){
+		switch (cadena[0]){
 			case '1':
-				return 1;
+				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+			//	incorporar_lector();
 				break;
 			case '2':
-				return 2;
+				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+			//	agregar_referencia();
 				break;
 			case '3':
-				return 3;
+				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+			//	expresar_opinion();
 				break;
 			case '4':
-				return 4;
+				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+			//	obtener_informe();
 				break;
 			case '5':
-				return 5;
+				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+			//	emitir_voto();
 				break;
 			case '6':
-				return 6;
+				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
 				break;
+			//	calcular_nota();
+				break;
+			case '7':
+				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+				break;
+			// listar_referencias()
+			case '8':
+				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+				break;
+			// buscar_referencia()
+			case '9':
+				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+				break;
+			// cambiar_lector()
 			case '0':
 				selec=confirmar();
 					if (selec==0){
-						return 0;}
+						return;}
 				break;
 			default:
 				printf("\nHas realizado una seleccion no valida\n");
 				break;
 		}//switch
-	}//while
+	}while (selec!='0');
 }
 
 int confirmar(){
-	char selec;
+	char selec, cadena[256];
 	do{
 		printf("\nSeguro que deseas salir del programa? (s/n): ");
-		fscanf(stdin," %c",&selec);
+		fgets(cadena,sizeof(cadena),stdin);
+		selec=cadena[0];
+		if (cadena[1]!='\n')
+		selec='a';
 		selec=toupper(selec);
 		if (selec=='S'){
 			return 0;}
