@@ -7,11 +7,11 @@ int confirmar();
 void titulo();
 void lados (int);
 void base ();
-
+/*
 int main(){
 	pantalla();	
 	return 0;
-}
+}*/
 
 void pantalla (){
 	char selec, cadena[256];
@@ -113,4 +113,5 @@ void lados (int num){
 	for(i=0;i<num;i++){
 		printf("#");
 		for(k=0;k<78;k++){printf(" ");}
-		printf("#\n");}}
+		printf("#\n");}
+		return;}
