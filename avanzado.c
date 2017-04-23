@@ -1,6 +1,8 @@
-//
-// Created by soutov on 21/04/17.
-//
+/*
+Las tres funciones del avanzado, funcionan pero queda cosas por cambiar.
+Ejemplo en cambiar nombre, al final cuando tienes que confirmar, si le das a enter sale del programa o si le das a no vuelve 
+a preguntar para que confirmes.
+*/
 #include <stdio.h>
 #include <string.h>
 #define LONGITUD 50
