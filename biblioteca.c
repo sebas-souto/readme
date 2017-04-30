@@ -6,8 +6,8 @@
 int comprobacion();
 
 int main(){
-	if (comprobacion()==1){
-		pantalla();}
+	if (comprobacion()==0) return 1;
+	pantalla();
 	return 0;
 }
 

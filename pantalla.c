@@ -1,72 +1,51 @@
 //TITULO MENU & CONFIRMACION SALIDA
-#include <stdio.h>
-#include <ctype.h>
-
-void pantalla();
-int confirmar();
-void titulo();
-void lados (int);
-void base ();
+#include "pantalla.h"
 /*
 int main(){
 	pantalla();	
 	return 0;
-}*/
-
+}
+*/
 void pantalla (){
-	char selec, cadena[256];
-	
-	titulo(); //IMPRIMIMOS LA CARTULA
-	
+	caratula('#',80,"BIBLIOTECA"); //IMPRIMIMOS LA CARTULA
+	char selec, cadena[256];	
 	do{		
 		printf("\n1) Incorporar lector\n2) Agregar referencia\n3) Expresar opinion\n4) Obtener informe\n5) Emitir voto\n6) Calcular nota\n7) Listar referencias\n8) Buscar referencias\n9) Cambiar lector\n0) Salir\n\nSiguiente comando? ");
 		fgets(cadena,sizeof(cadena),stdin);		
-		if (cadena[1]!='\n')
-		cadena[0]='a';
-	//	selec=atoi(cadena);	
+		selec=cadena[0];
+		if (cadena[1]!='\n') selec='X';	//SI NO SE INTRODUCE UN SOLO CARACTER INVALIDA EL 1º
 
-		switch (cadena[0]){
+		switch (selec){
 			case '1':
-				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
-			//	incorporar_lector();
+				//LECTOR
 				break;
 			case '2':
-				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
-			//	agregar_referencia();
+				//REFERENCIA
 				break;
 			case '3':
-				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
-			//	expresar_opinion();
+				//OPINION
 				break;
 			case '4':
-				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
-			//	obtener_informe();
+				//INFORME
 				break;
 			case '5':
-				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
-			//	emitir_voto();
+				//VOTO
 				break;
 			case '6':
-				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
-				break;
-			//	calcular_nota();
+				//NOTA
 				break;
 			case '7':
-				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+				//REFERENCIA
 				break;
-			// listar_referencias()
 			case '8':
-				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+				//REFERENCIA
 				break;
-			// buscar_referencia()
 			case '9':
-				while (fgetc(stdin) != '\n'); //LIMPIAMOS EL BUFFER
+				//LECTOR
 				break;
-			// cambiar_lector()
 			case '0':
 				selec=confirmar();
-					if (selec==0){
-						return;}
+					if (selec==0) return;
 				break;
 			default:
 				printf("\nHas realizado una seleccion no valida\n");
@@ -81,8 +60,7 @@ int confirmar(){
 		printf("\nSeguro que deseas salir del programa? (s/n): ");
 		fgets(cadena,sizeof(cadena),stdin);
 		selec=cadena[0];
-		if (cadena[1]!='\n')
-		selec='a';
+		if (cadena[1]!='\n') selec='X'; 
 		selec=toupper(selec);
 		if (selec=='S'){
 			return 0;}
@@ -91,27 +69,41 @@ int confirmar(){
 	} while (selec !='N');
 }
 
-void titulo(){
-	int k;
-	base();
-	lados(2);
-	printf("#");
-	for(k=0;k<34;k++){printf(" ");}
-	printf("BIBLIOTECA");
-	for(k=0;k<34;k++){printf(" ");}
-	printf("#\n");
-	lados(2);
-	base();}
+void caratula(char simbolo, int ancho, char *texto){
+	if (MAXIMO<ancho) ancho=MAXIMO;
+	base(simbolo,ancho);
+	lados(simbolo,ancho,2);
+	titulo(simbolo,ancho,texto);
+	lados(simbolo,ancho,2);
+	base(simbolo,ancho);}
 	
-void base (){
-	int k;
-	for(k=0;k<80;k++){printf("#");}
-	printf("\n");}
+int titulo(char simbolo, int ancho, char *texto){
+	if (ancho<strlen(texto)+2) return 1;   //SI EL ANCHO ES INSUFICIENTE RETORNA 1
+	int k, lado, resto;
+	lado=ancho-2-strlen(texto);
+	resto=strlen(texto)%2;
 	
-void lados (int num){
-	int i,k;
-	for(i=0;i<num;i++){
-		printf("#");
-		for(k=0;k<78;k++){printf(" ");}
-		printf("#\n");}
-		return;}
+	printf("%c",simbolo);
+	for(k=0;k<resto+lado/2;k++){
+		printf(" ");}
+ 	printf("%s",texto);
+	for(k=0;k<lado/2;k++){
+		printf(" ");}
+	printf("%c\n",simbolo);
+	return 0;}
+	
+void base(char simbolo, int ancho){
+	int k;
+	for(k=0;k<ancho;k++){
+		printf("%c",simbolo);}
+	printf("\n");		
+	return;}
+	
+void lados(char simbolo, int ancho, int lineas){
+	int k,i;
+	for (i=0;i<lineas;i++){
+			printf("%c",simbolo);
+		for(k=0;k<ancho-2;k++){
+			printf(" ");}
+		printf("%c\n",simbolo);	}
+	return;}
