@@ -1,11 +1,11 @@
-/*
-Las tres funciones del avanzado, funcionan pero queda cosas por cambiar.
-Ejemplo en cambiar nombre, al final cuando tienes que confirmar, si le das a enter sale del programa o si le das a no vuelve 
-a preguntar para que confirmes.
-*/
+//
+// Created by soutov on 21/04/17.
+//
 #include <stdio.h>
 #include <string.h>
 #define LONGITUD 50
+
+#include <ctype.h>
 struct informacion{
     int lector;
     char opinion[80];
@@ -38,7 +38,7 @@ struct lectores lector[100];
 void obtener_codigo(char *cadena, int *pts,int *id);
 int leer_lector();
 void obtener_nombre(char *cadena, int *pts,int *id);
-int obtener_puntos(char *cadena,int *pts);
+char*  obtener_puntos(char *cadena,int *pts);
 int comprobar_lector(char nombre[50], int *tamanio);
 void asignar_id(char nombre[LONGITUD],int *limite);
 void actualizar_txt (int *limite);
@@ -48,7 +48,7 @@ void actualizar_txt (int *limite);
 void listar_referencia(int longi);
 void  dame_referencias(char refe,int tamanio);
 void buscar_referencia(int tamanio);
-void busca(char *cadena, int tamanio);
+int busca(char *cadena, int tamanio);
 int compara_nombre(char *cadena,int tamanio);
 int compara_titulo(char *cadena,int tamanio);
 int compara(char *cadena1,char *cadena2);
@@ -57,8 +57,8 @@ void imprime_bus(int x);
 /**********************************************************************************************************************/
 
 void cambiar_lector(int tamanio_lector);
-int encontrar(char *buscar, int tamanio);
-void cambiar(int x,char *nuevo);
+int encontrar(char *buscar, int tamanio,int inicio);
+void cambiar(int x,char *nuevo,char *buscar,int tamanio_lector);
 
 
 
@@ -80,12 +80,12 @@ void opinion(char *cadena, int *pts, int *id2, int *id);
 /**********************************************************************************************************************/
 
 int main(){
-    int longi=0,nombre,x;
+    int longi=0,nombre=0;
     longi=leer_referencia();
     nombre=leer_lector();
-    //listar_referencia(longi);
+  //  listar_referencia(longi);
 
-        //buscar_referencia(longi);
+   //     buscar_referencia(longi);
         cambiar_lector(nombre);
 
     return 0;
@@ -130,22 +130,27 @@ int leer_referencia(){
 
 void listar_referencia(int longi){
     char cadena[256];
-    int tamanio=0;
-    printf("L)Libros\nA)Articulos\n\nElige el tipo de referencia que quieres listar: ");
-    fgets(cadena,sizeof(cadena),stdin);
-    tamanio=strlen(cadena);
-    printf("\n");
+    int tamanio=0,x=0;
 
-    if(tamanio>2) printf("\nTipo seleccionado no valido\n");
+    do {
+        printf("L)Libros\nA)Articulos\n\nElige el tipo de referencia que quieres listar: ");
+        fgets(cadena, sizeof(cadena), stdin);
+        tamanio = strlen(cadena);
+        x=0;
+         printf("\n");
 
-    else if(cadena[0]!='L'&& cadena[0]!='A'){
-        printf("\nTipo seleccionado no valido.\n\n");
-    }
-    else {
-        dame_referencias(cadena[0],longi);
-    }
+        if (tamanio > 2) printf("\nTipo seleccionado no valido\n");
 
+        else if (toupper(cadena[0]) != 'L' && toupper(cadena[0]) != 'A') {
+            printf("Tipo seleccionado no valido.\n\n");
+        }
 
+        else {
+            dame_referencias(toupper(cadena[0]), longi);
+            x=1;
+        }
+
+    }while(x==0);
 }
 /*Buscamos en el struct las referencia que sean del tipo que buscamos y las imprimimos segun el formato especificado*/
 
@@ -164,36 +169,39 @@ void  dame_referencias(char letra,int tamanio){
 
 /****************************************buscar referencia*************************************************************/
 void buscar_referencia(int tamanio){
-    char cadena[256];
+    char cadena[256];int correcto=0;
     int lon=0;
+    do {
     printf("Dame la cadena de busqueda: ");
     fgets(cadena,sizeof(cadena),stdin);
     lon=strlen(cadena);
 
 
-    if(cadena[0]=='\n') printf("\nCadena de busqueda vacia\n\n");
+        if (cadena[0] == '\n') printf("\nCadena de busqueda vacia\n\n");
 
-    else {
-        printf("\n");
-       busca(cadena,tamanio);
+        else {
+            printf("\n");
+           correcto= busca(cadena, tamanio);
 
-    }
-
+        }
+    }while(correcto==0);
 
 }
 
-void busca(char *cadena,int tamanio){
-    int resultado=0;//vemos si la comparacion tuvo exito o no->1 exito ->0 no exito
+int busca(char *cadena,int tamanio){
+    int resultado=0;int correcto=1;//vemos si la comparacion tuvo exito o no->1 exito ->0 no exito
     resultado=compara_nombre(cadena,tamanio);
     if(resultado==0){
-        return;
+        return correcto;
     }
     resultado=compara_titulo(cadena,tamanio);
     if(resultado==0){
-        return;
+        return correcto;
     }
     else{
         printf("\nNinguna referencia contiene la cadena buscada\n");
+        correcto=0;
+        return correcto;
     }
 }
 
@@ -257,8 +265,8 @@ int compara(char *cadena1,char *cadena2){
          p1[fin-1]='\0';
         //x=0;
         correcto = strcmp(cad, p1);
-       // printf("%s---%s---%i\n",cad,p1,correcto);
-        if (correcto==0) break;
+    //    printf("%s---%s---%i\n",cad,p1,correcto);
+        if (correcto==0) return 0;
         inicio++;
         fin++;
     }
@@ -279,51 +287,65 @@ void imprime_bus(int x){
 }
 
 /*******************************Cambiar lector*************************************************************************/
+
+
+
 void cambiar_lector(int tamanio_lector){
     char buscar[256];
     char nuevo[256];
     int lon=0,x;
-    int sigue=1;
-    while(sigue==1) {
-        printf("Dame el texto de busqueda: ");
-        fgets(buscar, sizeof(buscar), stdin);
+    int sigue=1;int correcto=0;
+    do{
+        sigue=1;
+        while(sigue==1) {
+            printf("Dame el texto de busqueda: ");
+            fgets(buscar, sizeof(buscar), stdin);
 
-        if (buscar[0] == '\n') printf("\nCadena de busqueda vacia\n\n");
-        else sigue=0;
-    }
-    sigue=1;
-    while(sigue==1) {
-        //   printf("\n");
-        printf("\nDame el nuevo texto: ");
-        fgets(nuevo, sizeof(nuevo), stdin);
-        if (nuevo[0] == '\n') printf("\nCadena de busqueda vacia\n\n");
+            if (buscar[0] == '\n') printf("\nCadena de busqueda vacia\n\n");
+            else sigue=0;
+         }
+         sigue=1;
+            do{
+            //   printf("\n");
+            printf("\nDame el nuevo texto: ");
+            fgets(nuevo, sizeof(nuevo), stdin);
+            if (nuevo[0] == '\n') printf("\nCadena de busqueda vacia\n\n");
 
-        else {
-            buscar[strlen(buscar) - 1] = '\0';
-            nuevo[strlen(nuevo) - 1] = '\0';
-            for (x = 0; x < strlen(nuevo); x++) {
-                if (nuevo[x] == ':') {
-                    printf("Caracter invalido\n");
-                  //  return;
+
+                buscar[strlen(buscar) - 1] = '\0';
+                nuevo[strlen(nuevo) - 1] = '\0';
+                for (x = 0; x < strlen(nuevo); x++) {
+                    if (nuevo[x] == ':') {
+                        printf("Caracter invalido\n");
+                      //  return;
+                    }
+
+                }
+              //  printf("%s --> %s\n", buscar, nuevo);
+                lon = encontrar(buscar, tamanio_lector,0);
+              //  printf("--> %i\n",lon);
+                if (lon != -1) {
+                    cambiar(lon, nuevo,buscar,tamanio_lector);
+                    sigue=0;
+                    correcto=1;
+                   // break;
+                }
+                else {
+                    sigue = 0;
+                  //  break;
                 }
 
-            }
-            //  printf("%s --> %s\n", buscar, nuevo);
-            lon = encontrar(buscar, tamanio_lector);
-            if (lon != -1) {
-                cambiar(lon, nuevo);
-                sigue=0;
-            }
 
-        }
+         } while(sigue==1);
 
-    }
+    }while(correcto==0);
+
 }
 
-int encontrar(char *buscar, int tamanio){
-    int correcto,x=0,y,inicio=0,fin=strlen(buscar);
+int encontrar(char *buscar, int tamanio,int inicio){//->ok 0, fallo->-1
+    int correcto,x=0,y,fin=strlen(buscar);
 
-    for(x=0;x<tamanio;x++){//Referemos el struct
+    for(x=inicio;x<tamanio;x++){//Referemos el struct
         correcto=compara(buscar,lector[x].nombre);
 
         if(correcto==0) {
@@ -332,27 +354,27 @@ int encontrar(char *buscar, int tamanio){
             correcto=x;
             return correcto;
         }
-        else{
             correcto=-1;
-           // return correcto;
-        }
+          //  return correcto;
 
     }
 
     return correcto;
 }
 
-void cambiar(int x,char *nuevo){
+void cambiar(int x,char *nuevo,char *buscar,int tamanio_lector){
     char confirmar[256]; int p=0, sigue=0;
     while(sigue==0) {
         printf("Quieres cambiar a este lector? (s/n):");
         fgets(confirmar, sizeof(confirmar), stdin);
         if (confirmar[0] == '\n'|| confirmar[0]=='\0') {
-            sigue=0;
+           // sigue=0;
         }
         if (strlen(confirmar) < 2) sigue=0;
 
-        if (confirmar[0] == 'N' || confirmar[0] == 'n') sigue=0;
+        if (confirmar[0] == 'N' || confirmar[0] == 'n') {
+            encontrar(buscar,,x);
+        }
         else sigue=1;
     }
 
@@ -369,6 +391,10 @@ void cambiar(int x,char *nuevo){
 
 
 }
+
+
+
+
 /**********************************************************************************************************************/
 
 void opinions(char *cadena, int *id2, int *id){
@@ -695,7 +721,7 @@ void obtener_nombre(char *cadena, int *pts,int *id){
     strcpy(lector[y].nombre, cadena2);
 }
 
-int obtener_puntos(char *cadena,int *pts){
+char* obtener_puntos(char *cadena,int *pts){
     int i=0, j=0;
     //int pts[10];
     for(i=0;i<strlen(cadena);i++){
