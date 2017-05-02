@@ -27,7 +27,9 @@ int main(){
     int tam_lec, tam_ref;
     tam_lec=leer_lector();
 	tam_ref=leer_referencia();
-	int eleccion;/*
+	int eleccion;
+	printf("Introduce el numero de la funcion (del 1 al 6)que desees ejecutar: ");
+	scanf(" %i",&eleccion);
 	switch(eleccion){
 		case 1:
 			incorporar_lector(&tam_lec);
@@ -56,13 +58,13 @@ int main(){
 		case 9:
 			//cambiar_lector();
 			break;
-	}*/
-    int k;
+	}
+   /* int k;
 
     for(k=0;k<tam_ref;k++){
-        printf("%s\n",refe[k].autor);}
+        printf("%i:%s:%i:%i:%c:%s:%i:%i\n",refe[k].anio,refe[k].autor,refe[k].criticos,refe[k].signatura,refe[k].tipo,refe[k].titulo,refe[k].votantes,refe[k].votos);}
     for(k=0;k<tam_lec;k++){
-    	printf("%s\n",lector[k].nombre);}
+    	printf("%s\n",lector[k].nombre);}*/
         
     actualizar_lector(&tam_lec);
   //  actualizar_refe(&tam_ref);
@@ -476,7 +478,7 @@ int leer_referencia(){
     char cadena[256];
     int id=0,id2=0;
     FILE *archivo;
-    archivo = fopen("referencia.txt", "r");
+    archivo = fopen("referencias.txt", "r");
 
     while(fgets(cadena,sizeof(cadena),archivo)!=NULL){
         if(cadena[0]==':'){
@@ -495,7 +497,7 @@ int leer_referencia(){
     return id;}
 
 void datos(char *cadena, int *id){
-    int pts[10], r=*id;
+    int pts[256], r=*id;
     puntos(cadena,pts);
     signa(cadena,pts,&r);
     tipo(cadena,pts,&r);
