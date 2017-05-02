@@ -23,13 +23,10 @@ struct lectores lector[100];
 struct referencia refe[100];
 
 //programa
-int main(){
+int base_de_datos(int eleccion){
     int tam_lec, tam_ref;
     tam_lec=leer_lector();
 	tam_ref=leer_referencia();
-	int eleccion;
-	printf("Introduce el numero de la funcion (del 1 al 6)que desees ejecutar: ");
-	scanf(" %i",&eleccion);
 	switch(eleccion){
 		case 1:
 			incorporar_lector(&tam_lec);

@@ -5,7 +5,7 @@
 
 int main(){
 	if (comprobacion()==0) return 1;
-	//pantalla();
+	pantalla();
 	return 0;
 }
 

@@ -9,4 +9,4 @@ int confirmar();
 void caratula(char,int,char *texto);
 void lados(char,int,int);
 void base(char,int);
-int titulo(char,int,char *texto);
+int tituloo(char,int,char *texto);

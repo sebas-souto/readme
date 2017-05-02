@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #define LONGITUD 50
-//int base_de_datos(int eleccion);
+int base_de_datoss(int eleccion);
 //BASICAS--------------------------------------------
 int incorporar_lector(int *limite);
 void agregar_referencia(int *id);

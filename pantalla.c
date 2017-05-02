@@ -68,11 +68,11 @@ void caratula(char simbolo, int ancho, char *texto){
 	if (MAXIMO<ancho) ancho=MAXIMO;
 	base(simbolo,ancho);
 	lados(simbolo,ancho,2);
-	titulo(simbolo,ancho,texto);
+	tituloo(simbolo,ancho,texto);
 	lados(simbolo,ancho,2);
 	base(simbolo,ancho);}
 	
-int titulo(char simbolo, int ancho, char *texto){
+int tituloo(char simbolo, int ancho, char *texto){
 	if (ancho<strlen(texto)+2) return 1;   //SI EL ANCHO ES INSUFICIENTE RETORNA 1
 	int k, lado, resto;
 	lado=ancho-2-strlen(texto);
