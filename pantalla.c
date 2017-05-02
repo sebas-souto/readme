@@ -1,11 +1,6 @@
 //TITULO MENU & CONFIRMACION SALIDA
 #include "pantalla.h"
-/*
-int main(){
-	pantalla();	
-	return 0;
-}
-*/
+
 void pantalla (){
 	caratula('#',80,"BIBLIOTECA"); //IMPRIMIMOS LA CARTULA
 	char selec, cadena[256];	
@@ -17,31 +12,31 @@ void pantalla (){
 
 		switch (selec){
 			case '1':
-				//LECTOR
+				base_de_datos(1);
 				break;
 			case '2':
-				//REFERENCIA
+				base_de_datos(2);
 				break;
 			case '3':
-				//OPINION
+				base_de_datos(3);
 				break;
 			case '4':
-				//INFORME
+				base_de_datos(4);
 				break;
 			case '5':
-				//VOTO
+				base_de_datos(5);
 				break;
 			case '6':
-				//NOTA
+				base_de_datos(6);
 				break;
 			case '7':
-				//REFERENCIA
+				base_de_datos(7);
 				break;
 			case '8':
-				//REFERENCIA
+				base_de_datos(8);
 				break;
 			case '9':
-				//LECTOR
+				base_de_datos(9);
 				break;
 			case '0':
 				selec=confirmar();

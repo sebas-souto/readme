@@ -1,11 +1,11 @@
 //PROGRAMA BIBLIOTECA
 #include "biblioteca.h"
 #include "pantalla.c"
-//#include "base_de_datos.c"
+#include "base_de_datos.c"
 
 int main(){
 	if (comprobacion()==0) return 1;
-	pantalla();
+	//pantalla();
 	return 0;
 }
 
@@ -58,12 +58,13 @@ int comprobar_lectores(){
 			if(cadena[k]==':') posicion=k+1;}
 		for(k=0;k<strlen(cadena)-3;k++){
 			nombre[k]=cadena[k+posicion];}
-		nombre[strlen(nombre)-2]='\n';
+		nombre[strlen(nombre)-2]='\0';
 		if(strlen(nombre)>MAX_LONG_NOMBRE) correcto=0;
-//		printf("numero: %i nombre: %s",numero,nombre);
+//		printf("numero: %i nombre: %s\n",numero,nombre);
 		posicion=0;
 		for(k=0;k<MAX_LONG_NOMBRE;k++){
-			nombre[k]=NULL;}	
+			nombre[k]='\0';
+		}
 	}
 	fclose(lectores);
 	if (correcto==1) return 1;
@@ -78,9 +79,10 @@ int comprobar_referencias(){
 	FILE *referencias;
 	referencias = fopen("referencias.txt","r");
 	while(fgets(cadena,sizeof(cadena),referencias)!=NULL){
-		printf("%s\n",cadena);
+	//	printf("%s\n",cadena);
 	}
 	fclose(referencias);
 	if (correcto==1) return 1;
 	return 0;
 }
+
