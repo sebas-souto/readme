@@ -59,14 +59,19 @@ void opinion(char *cadena, int *pts, int *id2, int *id);
 //programa
 int main(){
     int longi=0,nombre=0;
-	//longi=leer_referencia();
-    nombre=leer_lector();
-    int k;
-    for (k=0;k<30;k++){
-    	printf("%s",refe[k].criticos);}
+	longi=leer_referencia();
+  //  nombre=leer_lector();
+    int x;
+    printf("MAIN, %i\n",longi);
+
+    for(x=0;x<longi;x++){
+        printf("%s\n",refe[x].autor);
+
+    }
+
 	//incorporar_lector(&nombre);
-    actualizar_lector(&nombre);
-    actualizar_refe(&longi);
+  //  actualizar_lector(&nombre);
+  //  actualizar_refe(&longi);
 
     return 0;
 }
@@ -245,8 +250,11 @@ int leer_referencia(){
     archivo = fopen("referencia.txt", "r");
 
     while(fgets(cadena,sizeof(cadena),archivo)!=NULL){
+
         if(cadena[0]==':'){
+
             datos(cadena, &id);
+
             id++;
             id2=refe[id-1].criticos;}
 
@@ -257,12 +265,15 @@ int leer_referencia(){
         else{
             printf("Formato del fichero incorrecto\n");}
     }
+    printf("Llego aqui\n");
     fclose(archivo);
-    return id;}
+    printf("Cierro y paso %i\n",id);
+    return id;
+}
 
 void datos(char *cadena, int *id){
     int pts[10], r=*id;
-    puntos(cadena,pts);
+    *pts=puntos(cadena,pts);
     signa(cadena,pts,&r);
     tipo(cadena,pts,&r);
     autor(cadena,pts,&r);
@@ -284,8 +295,11 @@ int* puntos(char *cadena,int *pts){
     int i=0, j=0;
     for(i=0;i<strlen(cadena);i++){
         if(cadena[i]==':'){
+
             j++;
-            pts[j]=i;}
+            pts[j]=i;
+
+        }
     }
     return pts;
 }
@@ -297,7 +311,7 @@ void signa(char *cadena, int *pts, int *id){
     strcpy(cadena2,cadena);
     cadena2[pts[2]]='\0';
 
-    for(x=0;x<strlen(cadena2);x++){
+    for(x=pts[1];x<strlen(cadena2);x++){
         cadena2[x]=cadena2[x+1];
     }
     num=atoi(cadena2);
@@ -310,7 +324,7 @@ void tipo(char *cadena, int *pts, int *id){
     char variable[10],cadena2[80];
     strcpy(cadena2,cadena);
     cadena2[pts[3]]='\0';
-    // printf("%s--%i--%i\n",cadena2,pts[2],pts[3]);
+
 
     for(x=pts[2];x<pts[3];x++){
         if(cadena[x]!=':') {
@@ -339,6 +353,7 @@ void autor(char *cadena, int *pts, int *id){
     cadena2[num]='\0';
     //printf("%s\n",cadena2);
     strcpy(refe[y].autor,cadena2);
+
 }
 
 void titulo(char *cadena, int *pts, int *id) {
@@ -358,7 +373,7 @@ void titulo(char *cadena, int *pts, int *id) {
     cadena2[num]='\0';
     // printf("%s\n",cadena2);
     strcpy(refe[y].titulo, cadena2);
-    // printf("%s\n",refe[y].titulo);
+     //printf("%s\n",refe[y].titulo);
 }
 
 void anho(char *cadena, int *pts, int *id){
@@ -440,7 +455,7 @@ void criticos(char *cadena, int *pts, int *id){
     num=atoi(cadena2);
     // printf("#%i#\n",num);
     refe[y].criticos=num;
-    //printf("criticos:--%i---y=%i\n",refe[y].criticos,y);
+ //   printf("criticos:--%i---y=%i\n",refe[y].criticos,y);
 }
 
 void lect(char *cadena, int *pts,int *id2,int *id){
@@ -469,7 +484,7 @@ void lect(char *cadena, int *pts,int *id2,int *id){
     //printf("lector: %s\n",variable);
     num=atoi(variable);
     refe[y-1].info[r].lector=num;
-    //printf("lector: %i -%i---%i\n",refe[y-1].info[r].lector,y,r);
+   // printf("lector: %i -%i---%i\n",refe[y-1].info[r].lector,y,r);
 }
 
 void opinion(char *cadena, int *pts,int *id2,int *id){
@@ -492,7 +507,7 @@ void opinion(char *cadena, int *pts,int *id2,int *id){
     variable[num]='\0';
     // printf("%s\n",variable);
     strcpy(refe[y-1].info[r].opinion, variable);
-    // printf("%s --Usuario:%i ---nº: %i\n",refe[y-1].info[r].opinion,y-1,r);
+   //  printf("%s --Usuario:%i ---nï¿½: %i\n",refe[y-1].info[r].opinion,y-1,r);
     //  m++;
 }
 
