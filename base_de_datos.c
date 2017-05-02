@@ -496,12 +496,12 @@ int leer_referencia(){
 
 void datos(char *cadena, int *id){
     int pts[10], r=*id;
-    *pts=puntos(cadena,pts);
+    puntos(cadena,pts);
     signa(cadena,pts,&r);
     tipo(cadena,pts,&r);
     autor(cadena,pts,&r);
     titulo(cadena,pts,&r);
-    anho(cadena,*pts,&r);
+    anho(cadena,pts,&r);
     votantes(cadena,pts,&r);
     votos(cadena,pts,&r);
     criticos(cadena,pts,&r);
