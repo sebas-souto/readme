@@ -1,12 +1,12 @@
-#define MAXIMO 90
+#define ANCHO_MAXIMO 90
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
-void pantalla();
+void pantalla(char simbolo, int ancho, char *texto);
+void caratula(char simbolo, int ancho, char *texto);
+void lados(char simbolo, int ancho, int lineas);
+void base(char simbolo, int ancho);
+int Titulo(char simbolo, int ancho, char *texto);
 int confirmar();
-void caratula(char,int,char *texto);
-void lados(char,int,int);
-void base(char,int);
-int tituloo(char,int,char *texto);
