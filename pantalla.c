@@ -1,4 +1,5 @@
 //TITULO MENU & CONFIRMACION SALIDA
+#include "pantalla.h"
 void pantalla (char simbolo, int ancho, char *texto){
 	caratula(simbolo,ancho, texto); //IMPRIMIMOS LA CARTULA
 	char selec, cadena[256];	
