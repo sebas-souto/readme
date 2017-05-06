@@ -1,51 +1,49 @@
 //TITULO MENU & CONFIRMACION SALIDA
 #include "pantalla.h"
 void pantalla (char simbolo, int ancho, char *texto){
-	caratula(simbolo,ancho, texto); //IMPRIMIMOS LA CARTULA
-	char selec, cadena[256];	
+	caratula(simbolo, ancho, texto); //IMPRIMIMOS LA CARTULA
+	char cadena[256];	
 	do{		
 		printf("\n1) Incorporar lector\n2) Agregar referencia\n3) Expresar opinion\n4) Obtener informe\n5) Emitir voto\n6) Calcular nota\n7) Listar referencias\n8) Buscar referencias\n9) Cambiar lector\n0) Salir\n\nSiguiente comando? ");
-		fgets(cadena,sizeof(cadena),stdin);		
-		selec=cadena[0];
-		if (cadena[1]!='\n') selec='X';	//SI NO SE INTRODUCE UN SOLO CARACTER INVALIDA EL 1º
-
-		switch (selec){
+		fgets(cadena,sizeof(cadena),stdin);
+		if (cadena[1]!='\n') cadena[0]='X';	//SI NO SE INTRODUCE UN SOLO CARACTER INVALIDA EL 1º
+		switch (cadena[0]){
 			case '1':
-				base_de_datos(1);
+				programa(1);
 				break;
 			case '2':
-				base_de_datos(2);
+				programa(2);
 				break;
 			case '3':
-				base_de_datos(3);
+				programa(3);
 				break;
 			case '4':
-				base_de_datos(4);
+				programa(4);
 				break;
 			case '5':
-				base_de_datos(5);
+				programa(5);
 				break;
 			case '6':
-				base_de_datos(6);
+				programa(6);
 				break;
 			case '7':
-				base_de_datos(7);
+				programa(7);
 				break;
 			case '8':
-				base_de_datos(8);
+				programa(8);
 				break;
 			case '9':
-				base_de_datos(9);
+				programa(9);
 				break;
 			case '0':
-				selec=confirmar();
-					if (selec==0) return;
+				cadena[0]=confirmar();
+					if (cadena[0]==0) return;
 				break;
 			default:
 				printf("\nHas realizado una seleccion no valida\n");
 				break;
 		}//switch
-	}while (selec!='0');
+	}while (cadena[0]!='0');
 }
 
 void caratula(char simbolo, int ancho, char *texto){
@@ -88,16 +86,15 @@ int Titulo(char simbolo, int ancho, char *texto){
 	return 0;}
 	
 int confirmar(){
-	char selec, cadena[256];
+	char cadena[256];
 	do{
 		printf("\nSeguro que deseas salir del programa? (s/n): ");
 		fgets(cadena,sizeof(cadena),stdin);
-		selec=cadena[0];
-		if (cadena[1]!='\n') selec='X'; 
-		selec=toupper(selec);
-		if (selec=='S'){
+		if (cadena[1]!='\n') cadena[0]='X'; 
+		cadena[0]=toupper(cadena[0]);
+		if (cadena[0]=='S'){
 			return 0;}
-		else if (selec=='N'){
+		else if (cadena[0]=='N'){
 			return 1;}
-	} while (selec !='N');
+	} while (cadena[0]!='N');
 }

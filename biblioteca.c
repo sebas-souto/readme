@@ -1,15 +1,15 @@
 //PROGRAMA BIBLIOTECA
 #include "biblioteca.h"
-#include "pantalla.c"
 #include "base_de_datos.c"
+#include "pantalla.c"
 
-int main(){
+int main(){				//100%LISTA
 	if (comprobacion()==0) return 1;	//SI LOS TXT ESTAN MAL FORMADOS CIERRA EL PROGRAMA
 	pantalla('#',80,"BIBLIOTECA");
 	return 0;
 }
 
-int comprobacion(){
+int comprobacion(){		//100%LISTA
 	FILE *pf;
 	pf = fopen("lectores.txt","r");
 	if (pf==NULL) pf=fopen("lectores.txt","w");
@@ -54,7 +54,7 @@ int comprobar_referencias(){
 			if(comprobar_cadena(cadena,MAX_LONG_TITULO,4)==0) correcto=0;
 			if(comprobar_numero(cadena,MAX_LONG_ANHO,5)==0) correcto=0;
 			if(comprobar_numero(cadena,MAX_LONG_VOTANTES,6)==0) correcto=0;
-			if(comprobar_numero(cadena,MAX_LONG_VOTOS,7)==0) correcto=0;
+		//	if(comprobar_numero(cadena,MAX_LONG_VOTOS,7)==0) correcto=0;
 			if(comprobar_numero(cadena,MAX_LONG_CRITICOS,8)==0) correcto=0;}			
 		else if(cadena[0]=='#'){
 			if(comprobar_puntos(cadena,2)==0) correcto=0;
@@ -134,7 +134,7 @@ int comprobar_numero(char *cadena,int tam,int sitio){
 		if(isdigit(nombre[k-posicion])==0) correcto=0;}
 	numero=atoi(nombre);
 	if(numero>tam) correcto=0;
-	printf("%s %i correcto: %i\n",nombre,numero,correcto);
+//	printf("%s %i correcto: %i\n",nombre,numero,correcto);
 	
 	return correcto;}
 
