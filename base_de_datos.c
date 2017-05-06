@@ -33,9 +33,9 @@ void programa(int eleccion){		//100%LISTO
 			cambiar_lector(tam_lec);
 			break;
 	}
-  int k;
+//  int k;
 //	for(k=0;k<tam_ref;k++)printf("%i:%c:%s:%s:%i:%i:%.2f:%i\n",refe[k].signatura,refe[k].tipo,refe[k].autor,refe[k].titulo,refe[k].anio,refe[k].votantes,refe[k].votos,refe[k].criticos);
- // for(k=0;k<tam_lec;k++)printf("%i:%s\n",lector[k].codigo,lector[k].nombre);
+//  for(k=0;k<tam_lec;k++)printf("%i:%s\n",lector[k].codigo,lector[k].nombre);
     actualizar_lector(tam_lec);
 	actualizar_refe(tam_ref);
     return;}
@@ -96,7 +96,7 @@ void obtener_informe(int ult_sign){		//100%LISTA
     return;}
 
 void emitir_voto(int ult_sign){			//90%LISTA
-    int k, correcto, id=dame_signatura(ult_sign);
+    int correcto, id=dame_signatura(ult_sign);
     float voto;
     char cadena[256];
 	do{
@@ -154,11 +154,10 @@ void dame_referencias(char letra,int ult_sign){		//100%LISTA
 
 void buscar_referencia(int ult_sign){
     char cadena[256];
-	int correcto=0, lon=0;
+	int correcto=0;
     do{
     	printf("\nDame la cadena de busqueda: ");
 		fgets(cadena,sizeof(cadena),stdin);
-		lon=strlen(cadena);
 		
 		if (cadena[0] == '\n') printf("\nCadena de busqueda vacia\n");
 		else correcto= busca(cadena, ult_sign);
