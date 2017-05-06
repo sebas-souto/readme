@@ -34,7 +34,7 @@ void programa(int eleccion){		//100%LISTO
 			break;
 	}
   int k;
-	for(k=0;k<tam_ref;k++)printf("%i:%c:%s:%s:%i:%i:%.2f:%i\n",refe[k].signatura,refe[k].tipo,refe[k].autor,refe[k].titulo,refe[k].anio,refe[k].votantes,refe[k].votos,refe[k].criticos);
+//	for(k=0;k<tam_ref;k++)printf("%i:%c:%s:%s:%i:%i:%.2f:%i\n",refe[k].signatura,refe[k].tipo,refe[k].autor,refe[k].titulo,refe[k].anio,refe[k].votantes,refe[k].votos,refe[k].criticos);
  // for(k=0;k<tam_lec;k++)printf("%i:%s\n",lector[k].codigo,lector[k].nombre);
     actualizar_lector(tam_lec);
 	actualizar_refe(tam_ref);
@@ -42,7 +42,6 @@ void programa(int eleccion){		//100%LISTO
 
 //BASICAS--------------------------------------------
 void incorporar_lector (int *ult_lect){		//100%LISTA
-    int k;
     char nombre[MAX_LONG_NOMBRE];
     dame_cadena(MAX_LONG_NOMBRE,"\nEscribe el nombre del lector: ",nombre);
     if(comprobar_lector(nombre,ult_lect)==0) imprimir(4);
@@ -85,12 +84,10 @@ void expresar_opinion(int ult_sign,int ult_lect){		//70%LISTA
     return;}
 
 void obtener_informe(int ult_sign){		//100%LISTA
-    int x, z, p=0, id=dame_signatura(ult_sign);
+    int x, p=0, id=dame_signatura(ult_sign);
     
     printf("\nNumero de comentarios:%i",refe[id-1].criticos); 
-    for (x = refe[id-1].criticos; x > 0; x--){
-        z=refe[id-1].info[x].lector;
-        p++;}
+    for (x = refe[id-1].criticos; x > 0; x--) p++;
     if(refe[id-1].criticos!=0) {
         for (x = refe[x].criticos; x > 0; x--) {
             printf("\n%s:%s", lector[refe[id - 1].info[x].lector - 1].nombre, refe[id - 1].info[x].opinion);}
@@ -260,8 +257,7 @@ void imprime_bus(int x){
 }
 
 void cambiar_lector(int tam_lec){
-    char buscar[256];
-    char nuevo[256];
+    char buscar[256], nuevo[256];
     int lon=0,x,sigue=1,correcto=0;
     do{
         sigue=1;
@@ -304,10 +300,10 @@ void cambiar_lector(int tam_lec){
 
 }
 
-int encontrar(char *buscar, int tamanio,int inicio){//->ok 0, fallo->-1
+int encontrar(char *buscar, int ult_lect,int inicio){//->ok 0, fallo->-1
     int correcto,x=0,y,fin=strlen(buscar);
 
-    for(x=inicio;x<tamanio;x++){//Referemos el struct
+    for(x=inicio;x<ult_lect;x++){//Referemos el struct
         correcto=compara(buscar,lector[x].nombre);
 
         if(correcto==0) {
@@ -669,7 +665,7 @@ void criticos(char *cadena, int *pts, int *sign){
     return;}
 
 void lect(char *cadena, int *pts,int *id2,int *id){
-    int num,x,p=0,m=0;
+    int num,x,p=0;
     int y=*id;
     int r=*id2;
     char variable[10],cadena2[256];
@@ -715,4 +711,3 @@ void imprimir(int linea){
     };
     printf("%s",errores[linea]);
     return;}
-
