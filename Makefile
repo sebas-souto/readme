@@ -1,6 +1,6 @@
 #*******************************************************
-#Programacion I. Curso 2016-2017
-#Compilación del programa biblioteca
+# Programacion I. Curso 2016-2017
+# Compilación del programa biblioteca
 #*******************************************************
 
 
