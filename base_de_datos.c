@@ -1,6 +1,7 @@
 //BASE DE DATOS
 #include "base_de_datos.h"
-void programa(int eleccion){		//100%LISTO
+#include "pantalla.h"
+void programa(int eleccion){
     int tam_lec, tam_ref;
     tam_lec=leer_lector();
 	tam_ref=leer_referencia();
@@ -31,122 +32,117 @@ void programa(int eleccion){		//100%LISTO
 			break;
 		case 9:
 			cambiar_lector(tam_lec);
-			break;
-	}
-//  int k;
-//	for(k=0;k<tam_ref;k++)printf("%i:%c:%s:%s:%i:%i:%.2f:%i\n",refe[k].signatura,refe[k].tipo,refe[k].autor,refe[k].titulo,refe[k].anio,refe[k].votantes,refe[k].votos,refe[k].criticos);
-//  for(k=0;k<tam_lec;k++)printf("%i:%s\n",lector[k].codigo,lector[k].nombre);
+			break;}
+// 	int k,z;
+//	for(k=0;k<tam_ref;k++)printf("%i:%c:%s:%s:%i:%i:%i:%i\n",refe[k].signatura,refe[k].tipo,refe[k].autor,refe[k].titulo,refe[k].anio,refe[k].votantes,refe[k].votos,refe[k].criticos);
+/*	for(k=0;k<tam_ref;k++){
+		if(refe[k].criticos!=0){
+			for(z=1;z<=refe[k].criticos;z++)printf("%i:%s\n",refe[k].info[k].lector,refe[k].info[k].opinion);}
+			}*/
+//	for(k=0;k<tam_lec;k++)printf("%i:%s\n",lector[k].codigo,lector[k].nombre);
     actualizar_lector(tam_lec);
 	actualizar_refe(tam_ref);
     return;}
 
-//BASICAS--------------------------------------------
-void incorporar_lector (int *ult_lect){		//100%LISTA
-    char nombre[MAX_LONG_NOMBRE];
-    dame_cadena(MAX_LONG_NOMBRE,"\nEscribe el nombre del lector: ",nombre);
-    if(comprobar_lector(nombre,ult_lect)==0) imprimir(4);
-    else {
-        asignar_id(nombre,ult_lect);
-        printf("\nLector %s: asignado %i\n\n",lector[*ult_lect-1].nombre,lector[*ult_lect-1].codigo);}
+/*****************************************************************************************************************************************************************************
+******************************************************************************BASICAS*****************************************************************************************
+*****************************************************************************************************************************************************************************/
+void incorporar_lector (int *ult_lect){//LISTA
+    char nombre[256];
+    int i;
+    dame_cadena(MAX_LONG_NOMBRE,"\nEscribe el nombre del lector: ",nombre);		//PEDIMOS UN NOMBRE VALIDO
+    
+    for(i=0;i<*ult_lect;i++){		//RECORREMOS TODOS LOS NOMBRES PARA VER SI YA EXISTE
+        if ((strcmp(nombre,lector[i].nombre))==0){
+		imprimir(4);
+		return;}		//SI YA EXISTE SALIMOS
+	}		//SI NO EXISTE:
+    *ult_lect+=1;		//INCREMENTAMOS EL NUMERO DE LECTORES EN 1
+    strcpy(lector[*ult_lect-1].nombre,nombre);		//AÑADIMOS EL NUEVO LECTOR
+    lector[*ult_lect-1].codigo=*ult_lect;		//LE ASIGNAMOS EL ULTIMO CODIGO
+    printf("\nLector %s: asignado %i\n\n",lector[*ult_lect-1].nombre,lector[*ult_lect-1].codigo);
 	return;}
 
-void agregar_referencia(int *ult_sign){		//100%LISTA
-    int a=*ult_sign;
+void agregar_referencia(int *ult_sign){
+	char texto[256];    
+    refe[*ult_sign].signatura=*ult_sign+1;
+    dame_cadena(MAX_LONG_AUTOR,"\nEscribe el autor de la referencia: ",texto);
+	strcpy(refe[*ult_sign].autor,texto);
+	dame_cadena(MAX_LONG_TITULO,"\nEscribe el titulo: ",texto);
+    strcpy(refe[*ult_sign].titulo,texto);
+    refe[*ult_sign].anio=dame_numero(1451,2016,"\nEscribe el anho: ");
+    refe[*ult_sign].tipo=dame_tipo();
+    refe[*ult_sign].criticos=0;
+    refe[*ult_sign].votantes=0;
+    refe[*ult_sign].votos=0;
+    printf("\nReferencia %c:%s:%s:%i: asignada %i\n",refe[*ult_sign].tipo,refe[*ult_sign].autor,refe[*ult_sign].titulo,refe[*ult_sign].anio,refe[*ult_sign].signatura);
     *ult_sign+=1;
-    refe[*ult_sign-1].signatura=*ult_sign;
-    dame_autor(a);
-    dame_titulo(a);
-    dame_anio(a);
-    dame_tipo(a);
-    refe[a].criticos=0;
-    refe[a].votantes=0;
-    refe[a].votos=0;
-    printf("\nReferencia %c:%s:%s:%i: asignada %i\n",refe[a].tipo,refe[a].autor,refe[a].titulo,refe[a].anio,refe[a].signatura);
     return;}
 
-void expresar_opinion(int ult_sign,int ult_lect){		//70%LISTA
-    int codigo, correcto=0, id=dame_signatura(ult_sign);
-    char cadena[256], opinion[MAX_LONG_OPINION];    
-    
-    do{
-    	dame_cadena(256,"\nEscribe el codigo: ",cadena);
-    	codigo=atoi(cadena);
-    	if((codigo>0)&&(codigo<=ult_lect)) correcto=1;
-    	else imprimir(5);
-	}while(correcto==0);
-    dame_cadena(MAX_LONG_OPINION,"\nEscribe el comentario: ",opinion);
-    
-    refe[id-1].criticos++;
-    refe[id-1].info[refe[id-1].criticos].lector=codigo;
-    strcpy(refe[id-1].info[refe[id-1].criticos].opinion,opinion);
-    
-    printf("\nOpinion registrada\n");
+void expresar_opinion(int ult_sign,int ult_lect){//LISTA
+    int codigo, id;
+	char opinion[MAX_LONG_OPINION];
+    if(ult_sign==0||ult_lect==0) printf("\nOperacion imposible en este momento\n");	//SI NO HAY REFERENCIAS NI LECTORES SE ACABA LA FUNCION
+    else {
+        id = dame_numero(1,ult_sign,"\nEscribe la signatura: ");
+        codigo = dame_numero(1,ult_lect,"\nEscribe el codigo: ");
+        dame_cadena(MAX_LONG_OPINION, "\nEscribe el comentario: ", opinion);
+
+        refe[id - 1].criticos++;
+        refe[id - 1].info[refe[id - 1].criticos].lector = codigo;
+        strcpy(refe[id - 1].info[refe[id - 1].criticos].opinion, opinion);
+
+        printf("\nOpinion registrada\n");}
     return;}
 
-void obtener_informe(int ult_sign){		//100%LISTA
-    int x, p=0, id=dame_signatura(ult_sign);
-    
-    printf("\nNumero de comentarios:%i",refe[id-1].criticos); 
-    for (x = refe[id-1].criticos; x > 0; x--) p++;
-    if(refe[id-1].criticos!=0) {
-        for (x = refe[x].criticos; x > 0; x--) {
-            printf("\n%s:%s", lector[refe[id - 1].info[x].lector - 1].nombre, refe[id - 1].info[x].opinion);}
-    }    
-	printf("\n");
+void obtener_informe(int ult_sign){//LISTA
+    int x, p=0, id;
+    if(ult_sign==0) printf("\nOperacion imposible en este momento\n");
+    else {
+        id = dame_numero(1,ult_sign,"\nEscribe la signatura: ");
+        printf("\nNumero de comentarios:%i", refe[id - 1].criticos);
+        for (x = refe[id - 1].criticos; x > 0; x--) p++;
+        if (refe[id - 1].criticos != 0) {
+            for (x = 1; x <= refe[id-1].criticos; x++) {
+                printf("\n%s:%s", lector[refe[id - 1].info[x].lector - 1].nombre, refe[id - 1].info[x].opinion);}
+        }
+        printf("\n");}
     return;}
 
-void emitir_voto(int ult_sign){			//90%LISTA
-    int correcto, id=dame_signatura(ult_sign);
-    float voto;
-    char cadena[256];
-	do{
-    	correcto=1;
-        printf("\nEscribe el voto: ");
-        fgets(cadena,sizeof(cadena),stdin);
-/*        for(k=0;k<strlen(cadena)-1;k++){
-        	if(isdigit(cadena[k])==0) correcto=0;}*/
-        voto=atof(cadena);
-        if(voto<0 || voto>10) correcto=0;
-        if (correcto==0) imprimir(5);
-    } while (correcto==0);
-    refe[id-1].votos+=voto; 	//SUMAMOS EL VALOR DE VOTO AL VALOR DE VOTOS DE ESA ID
-    refe[id-1].votantes++;		//E INCREMENTAMOS VOTANTES EN 1
-    printf("\nVoto registrado\n");
+void emitir_voto(int ult_sign){//LISTA
+    int id, voto;
+    if (ult_sign == 0) printf("\nOperacion imposible en este momento\n");
+    else {
+        id = dame_numero(1,ult_sign,"\nEscribe la signatura: ");
+        voto = dame_numero(0,10,"\nEscribe el voto: ");
+        refe[id - 1].votos += voto;    //SUMAMOS EL VALOR DE VOTO AL VALOR DE VOTOS DE ESA ID
+        refe[id - 1].votantes++;        //E INCREMENTAMOS VOTANTES EN 1
+        printf("\nVoto registrado\n");}
     return;}
 
-void calcular_nota(int ult_sign){		//100%LISTA
-    int id=dame_signatura(ult_sign);
-
-    printf("\nNumero de votos:%i",refe[id-1].votantes);
-    if (refe[id-1].votos==0) printf("\nNota media:0.00\n");
-    else printf("\nNota media:%.2f\n",refe[id-1].votos/refe[id-1].votantes);
+void calcular_nota(int ult_sign){//LISTA
+    if (ult_sign == 0) printf("\nOperacion imposible en este momento\n");	//SI NO HAY REFERENCIAS ACABA LA FUNCION
+    else {
+        int id = dame_numero(1,ult_sign,"\nEscribe la signatura: ");
+        printf("\nNumero de votos:%i", refe[id - 1].votantes);
+        if (refe[id - 1].votos == 0) printf("\nNota media:0.00\n");
+        else printf("\nNota media:%.2f\n",(float) refe[id - 1].votos / refe[id - 1].votantes);}
     return;}
-//AVANZADAS------------------------------------------
-void listar_referencia(int ult_sign){		//100%LISTA
-    char cadena[256];
-    int correcto;
-
-    do {
-        printf("\nL)Libros\nA)Articulos\n\nElige el tipo de referencia que quieres listar: ");
-        fgets(cadena, sizeof(cadena), stdin);
-        correcto=1;
-
-        if (toupper(cadena[1]) != '\n'){
-			printf("\nTipo seleccionado no valido\n");
-			correcto=0;}
-			
-        else if (toupper(cadena[0]) != 'L' && toupper(cadena[0]) != 'A'){
-        	printf("\nTipo seleccionado no valido.\n");
-        	correcto=0;}
-    }while(correcto==0);
-    
-    dame_referencias(toupper(cadena[0]), ult_sign);
-	return;}
-
-void dame_referencias(char letra,int ult_sign){		//100%LISTA
+/*****************************************************************************************************************************************************************************
+******************************************************************************AVANZADAS***************************************************************************************
+*****************************************************************************************************************************************************************************/
+void listar_referencia(int ult_sign){
+	char tipo[256];
     int x;
+	do{
+    	dame_cadena(1,"\nL)Libros\nA)Articulos\n\nElige el tipo de referencias que quieres listar: ",tipo);
+    	tipo[0]=toupper(tipo[0]);
+		if(tipo[0]=='L'||tipo[0]=='A') x=1;
+        else printf("\nTipo seleccionado no valido");		
+	}while(x==0);
+	
     for(x=0;x<ult_sign;x++){
-        if(refe[x].tipo==letra){
+        if(refe[x].tipo==tipo[0]){
             printf("\n%i) %s. \"%s\" (%i)",refe[x].signatura,refe[x].autor,refe[x].titulo,refe[x].anio);}
 	}
 	printf("\n");
@@ -154,219 +150,196 @@ void dame_referencias(char letra,int ult_sign){		//100%LISTA
 
 void buscar_referencia(int ult_sign){
     char cadena[256];
-	int correcto=0;
-    do{
+	int x, correcto=0;
+	
+    do {
     	printf("\nDame la cadena de busqueda: ");
-		fgets(cadena,sizeof(cadena),stdin);
-		
-		if (cadena[0] == '\n') printf("\nCadena de busqueda vacia\n");
-		else correcto= busca(cadena, ult_sign);
+    	fgets(cadena,sizeof(cadena),stdin);
+    	for(x=0;x<strlen(cadena)-1;x++)
+        	if(cadena[x]!=' '&&cadena[x]!='	') correcto=1;
+
+        if (cadena[0] == '\n') correcto=0;
+        	
+        if (correcto==0) printf("\nCadena de busqueda vacia\n");
     }while(correcto==0);
     
+    for(x=0;x<ult_sign;x++){
+    	if(compara(cadena,refe[x].autor)==0) imprime_bus(x,&correcto);
+    	if(compara(cadena,refe[x].titulo)==0) imprime_bus(x,&correcto);}
+    if(correcto==1) printf("\nNinguna referencia contiene la cadena de busqueda\n");
     return;}
-
-int busca(char *cadena,int tamanio){
-    int resultado=0;int correcto=1;//vemos si la comparacion tuvo exito o no->1 exito ->0 no exito
-    resultado=compara_nombre(cadena,tamanio);
-    if(resultado==0){
-        return correcto;
-    }
-    resultado=compara_titulo(cadena,tamanio);
-    if(resultado==0){
-        return correcto;
-    }
-    else{
-        printf("\nNinguna referencia contiene la cadena buscada\n");
-        correcto=0;
-        return correcto;
-    }
-}
-
-int compara_nombre(char *cadena,int tamanio){
-    int correcto,x,y,inicio=0,fin=strlen(cadena);
-    for(x=0;x<tamanio;x++){//Referemos el struct
-       // for(y=0;y<strlen(refe[x].autor);y++){
-            correcto=compara(cadena,refe[x].autor);
-            if(correcto==0) {
-               /* printf("%i) [%c] %s. \" %s\" (%i)\n",refe[x].signatura,refe[x].tipo,refe[x].autor,refe[x].titulo,refe[x].anio);
-                if(refe[x].criticos!=0){
-
-                }*/
-                imprime_bus(x);
-                return correcto;
-            }
-       // }
-    }
-    return correcto;
-}
-
-int compara_titulo(char *cadena,int tamanio){
-    int correcto;
-    int x,y,inicio=0,fin=strlen(cadena);
-    for(x=0;x<tamanio;x++){//Referemos el struct
-       // for(y=0;y<strlen(refe[x].titulo);y++){
-            correcto=compara(cadena,refe[x].titulo);
-            if(correcto==0) {
-               // printf("%i) [%c] %s .\" %s\" (%i)\n",refe[x].signatura,refe[x].tipo,refe[x].autor,refe[x].titulo,refe[x].anio);
-                imprime_bus(x);
-                return correcto;
-            }
-
-      //  }
-
-    }
-
-    return correcto;
-}
 
 int compara(char *cadena1,char *cadena2){
     char p1[256],cad[256],cad1[256];
-    int correcto,x,p,y=0,inicio=0,fin=strlen(cadena1);
+    int p,y,inicio=0,fin=strlen(cadena1);
     strcpy(cad,cadena1);
     strcpy(cad1,cadena2);
     cad[strlen(cad)-1]='\0';
     cad1[strlen(cad1)]='\0';
+	
+   // printf("Cadenas a comparar: %s---%s\n",cad,cad1);
     while(fin<strlen(cad1)+2) {
         y=0;
         for (p =inicio; p < fin-1; p++) {
             p1[y] = cad1[p];
-            y++;
-        }
-         p1[fin-1]='\0';
-        //x=0;
-        correcto = strcmp(cad, p1);
-    //    printf("%s---%s---%i\n",cad,p1,correcto);
-        if (correcto==0) return 0;
+            y++;}
+    	p1[fin-1]='\0';
+        if (strcmp(cad, p1)==0) return 0;
         inicio++;
-        fin++;
-    }
-    return correcto;
-}
-
-void imprime_bus(int x){
-    int y;
-    printf("%i) [%c] %s. \" %s\" (%i)\n",refe[x].signatura,refe[x].tipo,refe[x].autor,refe[x].titulo,refe[x].anio);
-    if(refe[x].criticos!=0){
-        for(y=1;y<refe[x].criticos+1;y++){
-            printf("%s -> %s\n",lector[refe[x].criticos].nombre,refe[x].info[y].opinion);
-        }
-
-    }
-
-}
-
-void cambiar_lector(int tam_lec){
-    char buscar[256], nuevo[256];
-    int lon=0,x,sigue=1,correcto=0;
-    do{
-        sigue=1;
-        while(sigue==1) {
-            printf("Dame el texto de busqueda: ");
-            fgets(buscar, sizeof(buscar), stdin);
-
-            if (buscar[0] == '\n') printf("\nCadena de busqueda vacia\n\n");
-            else sigue=0;
-         }
-         sigue=1;
-            do{
-            //   printf("\n");
-            printf("\nDame el nuevo texto: ");
-            fgets(nuevo, sizeof(nuevo), stdin);
-            if (nuevo[0] == '\n') printf("\nCadena de busqueda vacia\n\n");
-                buscar[strlen(buscar) - 1] = '\0';
-                nuevo[strlen(nuevo) - 1] = '\0';
-                for (x = 0; x < strlen(nuevo); x++) {
-                    if (nuevo[x] == ':') {
-                        printf("Caracter invalido\n");
-                      //  return;
-                    }
-                }
-              //  printf("%s --> %s\n", buscar, nuevo);
-                lon = encontrar(buscar, tam_lec,0);
-              //  printf("--> %i\n",lon);
-                if (lon != -1) {
-                    cambiar(lon, nuevo,buscar,tam_lec);
-                    sigue=0;
-                    correcto=1;
-                   // break;
-                }
-                else {
-                    sigue = 0;
-                  //  break;
-                }
-         } while(sigue==1);
-    }while(correcto==0);
-
-}
-
-int encontrar(char *buscar, int ult_lect,int inicio){//->ok 0, fallo->-1
-    int correcto,x=0,y,fin=strlen(buscar);
-
-    for(x=inicio;x<ult_lect;x++){//Referemos el struct
-        correcto=compara(buscar,lector[x].nombre);
-
-        if(correcto==0) {
-        	printf("Encontrado: %i) %s\n",lector[x].codigo,lector[x].nombre);
-            correcto=x;
-            return correcto;}
-            correcto=-1;
-          //  return correcto;
-    }
-    return correcto;
-}
-
-void cambiar(int x,char *nuevo,char *buscar,int tam_lec){
-    char confirmar[256]; int p=0, sigue=0;
-    while(sigue==0) {
-        printf("Quieres cambiar a este lector? (s/n):");
-        fgets(confirmar, sizeof(confirmar), stdin);
-        if (confirmar[0] == '\n'|| confirmar[0]=='\0') {
-           // sigue=0;
-        }
-        if (strlen(confirmar) < 2) sigue=0;
-        if (confirmar[0] == 'N' || confirmar[0] == 'n') {
-            encontrar(buscar, tam_lec,x);}
-        else sigue=1;
-    }
-    if(confirmar[0]=='S'||confirmar[0]=='s'){
-        nuevo[strlen(nuevo)]='\0';
-     //   printf("***1-->%i---%s----%s\n",x+1,lector[x].nombre,nuevo);
-        strcpy(lector[x].nombre,nuevo);
-        printf("Lector cambiado a: %i) %s\n",lector[x].codigo,lector[x].nombre);
-        return;
-    }
-    else{
-        return;
-    }
-}
-
-//LECTOR---------------------------------------------
-int comprobar_lector(char nombre[MAX_LONG_NOMBRE], int *ultimo){		//100%LISTA
-    int i;
-    for(i=0;i<*ultimo;i++){
-        if ((strcmp(nombre,lector[i].nombre))==0) return 0;}
+        fin++;}
     return 1;}
 
-void asignar_id(char nombre[MAX_LONG_NOMBRE],int *ultimo){		//100%LISTA
-	*ultimo+=1;
-    strcpy(lector[*ultimo-1].nombre,nombre);
-    lector[*ultimo-1].codigo=*ultimo;}
-//REFERENCIA-----------------------------------------
-void dame_cadena (int limite,char *pantalla, char *cadena2){	//100%LISTA
-    int i=0, correcto;
-    char cadena[limite+2];
+void imprime_bus(int x, int *correcto){
+    int y;
+    *correcto=0;
+    printf("\n%i) [%c] %s. \" %s\" (%i)\n",refe[x].signatura,refe[x].tipo,refe[x].autor,refe[x].titulo,refe[x].anio);
+    if(refe[x].criticos!=0){
+        for(y=1;y<=refe[x].criticos;y++)
+            printf("%s -> %s\n",lector[refe[x].info[y].lector-1].nombre,refe[x].info[y].opinion);}
+    return;}
+
+void cambiar_lector(int ult_lect){
+    char buscar[256], nuevo[256]="", sigo;
+    int x, correcto=0,cambio=0;
+    dame_cadenas(buscar,nuevo);
+	  printf("\n");
+    x=0;
+    do{
+    	while(x<=ult_lect||correcto==0){//Referemos el struct
+			x++;
+			//printf("*Nombres: %s--\n",lector[x-1].nombre);
+			correcto=compara(buscar,lector[x-1].nombre);
+			//printf("*Correcto ->%i--\n",correcto);			
+		if(correcto==0){
+			sigo=dame_confirmacion(x-1);
+    			if(sigo=='S') {cambiar(x-1,nuevo,buscar);correcto=1;cambio++;return;}
+			if(sigo=='N'){correcto=0;}
+			
+		} //CAMBIAMOS EL LECTOR
+	
+	}
+    	if(correcto!=1 ||cambio==0) {
+		printf("\nNingun lector cambiado\n");//SI NO ENCUENTRA EL LECTOR ACABA AQUI
+		return;	
+	}
+    }while(x<=ult_lect||sigo=='S');   
+    return;}
+    
+void dame_cadenas(char *buscar, char *nuevo){
+	int x, correcto=0;
+	printf("\n");
+	do{
+	
+    		printf("\nDame el texto de busqueda: ");
+    		fgets(buscar,256,stdin);
+	 	/*if (buscar[0]=='\n') {
+			printf("\nTexto vacio\n");
+			}
+		else correcto=1;*/
+		for(x=0;x<strlen(buscar)-1;x++){
+        		if((buscar[x]!='\t'||buscar[x]!=' ')&& buscar[0]!='\n'){
+			  correcto=1;
+			  break;
+			} 
+			else 	{
+			   printf("\nTexto vacio\n");
+		           correcto=0;			
+			}					
+		
+		}
+    	//	printf("Buscar: %s\n",buscar);
+	}while(correcto==0);
+	correcto=0;
+	
+
+	buscar[strlen(buscar)-1]='\0';
+	int salta=1;
+    do{
+	salta=1;
+    	//correcto=1;
+    	printf("\nDame el nuevo texto: ");
+    	fgets(nuevo,256,stdin);
+    //    nuevo[strlen(nuevo)-1]='\0';
+	
+       for(x=0;x<strlen(nuevo);x++){
+        	if (nuevo[x]==':'){
+			salta=3; 
+			//printf("%c %i",nuevo[x],salta);
+			correcto=0;
+			printf("\nCaracter invalido\n");
+		//	imprimir(1);
+			break;
+		}//if
+		//x++;
+		//printf("Sustituir: %s\n",nuevo);
+		
+           }	
+	if(salta==1) {correcto=1;break;}
+    }while(correcto==0);
+    nuevo[strlen(nuevo)-1]='\0';	
+	return;}
+	
+char dame_confirmacion(int x){
+	char sigo[256];
+	int correcto;
+	do{
+        printf("\nEncontrado: %i) %s\n\nQuieres cambiar a este lector? (s/n): ",lector[x].codigo,lector[x].nombre);
+       	fgets(sigo, sizeof(sigo), stdin);
+       	sigo[0]=toupper(sigo[0]);
+       	if (sigo[0] == 'N' || sigo[0] == 'S') correcto=1; 
+      	if (sigo[1] != '\n') correcto=0;   
+    } while(correcto==0);
+	return sigo[0];}
+	
+void cambiar(int x, char *nuevo,char *buscar){
+    char cambio[256];char cambio2[256];int pos_bus=0,y=0,p=0,tam=0,i=0;	
+	char cambio3[256];
+    pos_bus=strlen(buscar);
+	for(i=0;i<strlen(lector[x].nombre);i++){
+	//	printf("--%c----%c\n",buscar[0],lector[x].nombre[i]);
+		if(lector[x].nombre[i]==buscar[0])break;
+		else {
+		cambio[i]=lector[x].nombre[i];
+		
+		}
+	}
+	cambio[i]='\0';
+	//printf("0--%s\n",cambio);
+	//if (i==strlen(lector[x].nombre)) i=0;
+	for(y=0;y<strlen(nuevo);y++){//copio lo nuevo
+		cambio2[y]=nuevo[tam];
+		tam++;
+		}
+	cambio2[tam]='\0';
+	strcat(cambio,cambio2);
+	//printf("1--%s\n",cambio);
+	for(y=i+pos_bus;y<strlen(lector[x].nombre);y++){//copio lo ultimo
+		cambio3[p]=lector[x].nombre[y];
+	//	printf("--%c",cambio3[y]);
+		p++;
+	}
+	strcat(cambio,cambio3);
+	cambio[i+tam+p]='\0';
+	//printf("--%s\n",cambio);
+    strcpy(lector[x].nombre,cambio);
+    printf("\nLector cambiado a: %i) %s\n",lector[x].codigo,lector[x].nombre);
+    return;}
+/*****************************************************************************************************************************************************************************
+******************************************************************************DAME DATOS**************************************************************************************
+*****************************************************************************************************************************************************************************/
+void dame_cadena (int limite,char *pantalla, char *cadena2){	//PENDIENTE REVISAR
+    int i, correcto;
+    char cadena[256];
     do{
         printf("%s",pantalla);
         fgets(cadena,sizeof(cadena),stdin);
-        correcto=1;
-
+        correcto=1; i=0;
         if (cadena[0]=='\n'){    				          //CADENA VACIA
             correcto=0;
             imprimir(2);}
-        else if (cadena[strlen(cadena)-1] != '\n'){       //LONGITUD CADENA EXCESIVA
+        else if (limite+1<strlen (cadena)){       //LONGITUD CADENA EXCESIVA
             correcto=0;
-            imprimir(3);
-            while (fgetc(stdin) != '\n');}
+            imprimir(3);}
         else {                                            //CARACTER INVALIDO
             while (i<strlen(cadena)){
                 if (cadena[i]==':'){ correcto=0; imprimir(1);}
@@ -376,32 +349,23 @@ void dame_cadena (int limite,char *pantalla, char *cadena2){	//100%LISTA
     cadena[strlen(cadena)-1]='\0';
     strcpy(cadena2,cadena);}
 
-void dame_autor(int sign){		//100%LISTA
-    char autor[MAX_LONG_AUTOR];
-    dame_cadena(MAX_LONG_AUTOR,"\nEscribe el autor de la referencia: ",autor);
-    strcpy(refe[sign].autor,autor);
-	return;}
+int dame_numero(int limite1, int limite2, char *pantalla){			//100%LISTA
+	int k, numero, correcto;
+	char cadena[256];
+	do{
+    	correcto=1;
+        printf("%s",pantalla);
+        fgets(cadena,sizeof(cadena),stdin);
+        for(k=0;k<strlen(cadena)-1;k++){
+        	if(isdigit(cadena[k])==0) correcto=0;}
+        numero=atoi(cadena);
+        if (numero<limite1 || numero>limite2) correcto=0;
+        if (correcto==0) imprimir(5);
+    } while (correcto==0);
 
-void dame_titulo(int sign){		//100%LISTA
-    char titulo[MAX_LONG_TITULO];
-    dame_cadena(MAX_LONG_TITULO,"\nEscribe el titulo: ",titulo);
-    strcpy(refe[sign].titulo,titulo);
-	return;}
+	return numero;}
 
-void dame_anio(int sign){		//90%LISTA
-    int year,correcto=0;
-    char cadena[256];
-    do{
-    	dame_cadena(256,"\nEscribe el anho: ",cadena);
-    	year=atoi(cadena);
-    	if((1450<year)&&(year<2017)) correcto=1;
-    	else imprimir(5);
-	}while(correcto==0);
-	
-    refe[sign].anio=year;
-    return;}
-
-void dame_tipo(int sign){		//100%LISTA
+char dame_tipo(){		//100%LISTA
     int correcto=0;
     char tipo[256];
 	do{
@@ -411,99 +375,54 @@ void dame_tipo(int sign){		//100%LISTA
         else imprimir(1);		
 	}while(correcto==0);
 	
-    refe[sign].tipo=tipo[0];
-    return;}
-
-int dame_signatura(int ult_sing){			//100%LISTA
-	int k, signatura, correcto;
-	char cadena[256];
-	do{
-    	correcto=1;
-        printf("\nEscribe la signatura: ");
-        fgets(cadena,sizeof(cadena),stdin);
-        for(k=0;k<strlen(cadena)-1;k++){
-        	if(isdigit(cadena[k])==0) correcto=0;}
-        signatura=atoi(cadena);
-        if (signatura<1 || signatura>ult_sing) correcto=0;
-        if (correcto==0) imprimir(5);
-    } while (correcto==0);
-	
-	return signatura;}
-//ACTUALIZAR TXTs------------------------------------
-void actualizar_lector (int ult_lect){		//100%LISTA
+    return tipo[0];}
+/*****************************************************************************************************************************************************************************
+******************************************************************************ACTUALIZAR TXTS*********************************************************************************
+*****************************************************************************************************************************************************************************/
+void actualizar_lector (int ult_lect){//LISTA
     int i;
     FILE *archivo;
     archivo = fopen("lectores.txt", "w");
     for (i=0; i<ult_lect; i++) {
         fprintf(archivo,":%i:%s:\n", lector[i].codigo,lector[i].nombre);}
-    fclose(archivo);}
+    fclose(archivo);
+    return;}
 
-void actualizar_refe (int ult_sing) {		//100%LISTA
+void actualizar_refe (int ult_sing) {//LISTA
     int x, z;
     FILE *archivo;
     archivo = fopen("referencias.txt", "w");
     for (x=0; x<ult_sing; x++) {
-        fprintf(archivo,":%i:%c:%s:%s:%i:%i:%f:%i:\n", refe[x].signatura, refe[x].tipo, refe[x].autor, refe[x].titulo, refe[x].anio, refe[x].votantes, refe[x].votos, refe[x].criticos);
-        for (z = refe[x].criticos; z > 0; z--) {
-            fprintf(archivo,"#%i:%s:\n", refe[x].info[z].lector, refe[x].info[z].opinion);}
+    	
+        fprintf(archivo,":%i:%c:%s:%s:%i:%i:%i:%i:\n", refe[x].signatura, refe[x].tipo, refe[x].autor, refe[x].titulo, refe[x].anio, refe[x].votantes, refe[x].votos, refe[x].criticos);
+		if(refe[x].criticos!=0) {
+           for (z = 1; z <= refe[x].criticos; z++)
+               fprintf(archivo, "#%i:%s:\n", refe[x].info[z].lector, refe[x].info[z].opinion);}
     }
-    fclose(archivo);}
-
-//LEER LECTOR-----------------------------------------
-int leer_lector(){				//100%LISTA
+    fclose(archivo);
+	return;}
+/*****************************************************************************************************************************************************************************
+*******************************************************************************LEER TXTS**************************************************************************************
+*****************************************************************************************************************************************************************************/
+int leer_lector(){
     char cadena[256];
-    int pts[256], lect=0;
+    char informacion[256];
+    int lect=0;
     FILE *archivo;
     archivo = fopen("lectores.txt", "r");
 
     while(fgets(cadena,sizeof(cadena),archivo)!=NULL){
-        obtener_puntos(cadena,pts);
-        obtener_codigo(cadena,pts,lect);
-        obtener_nombre(cadena,pts,lect);
+    	leer_info(cadena,informacion,1);
+    	lector[lect].codigo=atoi(informacion);
+    	leer_info(cadena,informacion,2);
+		strcpy(lector[lect].nombre,informacion);
         lect++;}
     fclose(archivo);
     return lect;}
 
-void obtener_puntos(char *cadena,int *pts){					//100%LISTA
-    int i, j=0;
-    for(i=0;i<strlen(cadena);i++){
-        if(cadena[i]==':'){
-            j++;
-            pts[j]=i;}
-    }
-    return;}
-
-void obtener_codigo(char *cadena, int *pts,int lect){		//100%LISTA
-    int x, p=0;
-    char variable[10],cadena2[256];
-    strcpy(cadena2,cadena);
-    cadena2[pts[2]]='\0';
-    for(x=pts[1];x<pts[2];x++){
-        if(cadena2[x]!=':') {
-            variable[p] = cadena2[x];
-            p++;}
-    }
-    lector[lect].codigo=atoi(variable);
-	return;}
-
-void obtener_nombre(char *cadena, int *pts,int lect){		//100%LISTA
-    int x, p=0;
-    char cadena2[256];
-    strcpy(cadena2, cadena);
-    cadena2[pts[3]] = '\0';
-    for (x = pts[2]; x < strlen(cadena2); x++) {
-        if (cadena2[x] != ':') {
-            cadena2[p] = cadena2[x];
-            p++;}
-    }
-    cadena2[p] = '\0';
-    strcpy(lector[lect].nombre,cadena2);
-    return;}
-
-//LEER REFERENCIA------------------------------------
 int leer_referencia(){
     char cadena[256];
-    int sign=0,id2=0;
+    int sign=0,id2;
     FILE *archivo;
     archivo = fopen("referencias.txt", "r");
 
@@ -511,199 +430,60 @@ int leer_referencia(){
         if(cadena[0]==':'){
             datos(cadena, &sign);
             sign++;
-            id2=refe[sign-1].criticos;}
+			id2=1;}
 
         else if(cadena[0]=='#'){
 			opinions(cadena,&id2,&sign);
-            id2--;}
+            id2++;}
     }
     fclose(archivo);
     return sign;}
 
 void datos(char *cadena, int *sign){
-    int pts[256];
-    puntos(cadena,pts);
-    signa(cadena,pts,sign);
-    tipo(cadena,pts,sign);
-    autor(cadena,pts,sign);
-    titulo(cadena,pts,sign);
-    anho(cadena,pts,sign);
-    votantes(cadena,pts,sign);
-    votos(cadena,pts,sign);
-    criticos(cadena,pts,sign);
-}
+	char informacion[256];
+    leer_info(cadena,informacion,1);
+    refe[*sign].signatura=atoi(informacion);
+    leer_info(cadena,informacion,2);
+    refe[*sign].tipo=informacion[0];
+    leer_info(cadena,informacion,3);
+    strcpy(refe[*sign].autor,informacion);
+    leer_info(cadena,informacion,4);
+    strcpy(refe[*sign].titulo,informacion);
+    leer_info(cadena,informacion,5);
+    refe[*sign].anio=atoi(informacion);
+    leer_info(cadena,informacion,6);
+    refe[*sign].votantes=atoi(informacion);
+    leer_info(cadena,informacion,7);
+    refe[*sign].votos=atoi(informacion);
+    leer_info(cadena,informacion,8);
+    refe[*sign].criticos=atoi(informacion);}
 
 void opinions(char *cadena, int *id2, int *id){
-    int pts[10], r=*id, m=*id2;
-    puntos(cadena,pts);
-    lect(cadena,pts,&m,&r);
-    opinion(cadena,pts,&m,&r);
-}
+    char informacion[256];
+	leer_info(cadena,informacion,1);
+	refe[*id-1].info[*id2].lector=atoi(informacion);
+    leer_info(cadena,informacion,2);
+    strcpy(refe[*id-1].info[*id2].opinion, informacion);}
 
-void puntos(char *cadena,int *pts){
-    int i=0, j=0;
-    for(i=0;i<strlen(cadena);i++){
-        if(cadena[i]==':'){
-            j++;
-            pts[j]=i;}
-    }
-    return;}
-
-void signa(char *cadena, int *pts, int *sign){
-    int x;
-    char cadena2[80];
-    strcpy(cadena2,cadena);
-    cadena2[pts[2]]='\0';
-
-    for(x=0;x<strlen(cadena2);x++) cadena2[x]=cadena2[x+1];
-    refe[*sign].signatura=atoi(cadena2);
-    return;}
-
-void tipo(char *cadena, int *pts, int *sign){
-    int num=0,x;
-    char variable[10], cadena2[80];
-    strcpy(cadena2,cadena);
-    cadena2[pts[3]]='\0';
-
-    for(x=pts[2];x<pts[3];x++){
-        if(cadena[x]!=':') {
-            variable[num] = cadena2[x];
-            num++;}
-    }
-    refe[*sign].tipo=variable[0];
-    return;}
-
-void autor(char *cadena, int *pts, int *sign){
-    int num=0,x;
-    char cadena2[80];
-    strcpy(cadena2,cadena);
-    cadena2[pts[4]]='\0';
-
-    for(x=pts[3];x<strlen(cadena2);x++){
-        if(cadena[x]!=':') {
-            cadena2[num] = cadena2[x];
-            num++;}
-    }
-    cadena2[num]='\0';
-    strcpy(refe[*sign].autor,cadena2);
-    return;}
-
-void titulo(char *cadena, int *pts, int *sign) {
-    int num = 0, x;
-    char cadena2[80];
-    strcpy(cadena2, cadena);
-    cadena2[pts[5]] = '\0';
-
-    for (x = pts[4]; x < strlen(cadena2); x++) {
-        if (cadena2[x] != ':') {
-            cadena2[num] = cadena2[x];
-
-            num++;
-        }
-    }
-    cadena2[num]='\0';
-    // printf("%s\n",cadena2);
-    strcpy(refe[*sign].titulo, cadena2);
-    // printf("%s\n",refe[y].titulo);
-}
-
-void anho(char *cadena, int *pts, int *sign){
-    int x,p=0;
-    char variable[10],cadena2[120];
-    strcpy(cadena2,cadena);
-    cadena2[pts[6]]='\0';
-    for(x=pts[5];x<strlen(cadena2);x++){
-        if(cadena2[x]!=':') {
-            variable[p] = cadena2[x];
-            p++;}
-    }
-    variable[p]='\0';
-    refe[*sign].anio=atoi(variable);
-    return;}
-
-void votantes(char *cadena, int *pts, int *sign){
-    int x,p=0;
-    char cadena2[120];
-    strcpy(cadena2,cadena);
-    cadena2[pts[7]]='\0';
-    for(x=pts[6];x<strlen(cadena2);x++){
-        if(cadena2[x]!=':') {
-            cadena2[p] = cadena2[x];
-            p++;}
-    }
-    cadena2[p]='\0';
-    refe[*sign].votantes=atoi(cadena2);
-    return;}
-
-void votos(char *cadena, int *pts, int *sign){
-    int x,p=0;
-    char cadena2[120];
-    strcpy(cadena2,cadena);
-    cadena2[pts[8]]='\0';
-    for(x=pts[7];x<pts[8];x++){
-        if(cadena2[x]!=':') {
-            cadena2[p] = cadena2[x];
-            p++;}
-    }
-    cadena2[p]='\0';
-    refe[*sign].votos=atof(cadena2);
-    return;}
-
-void criticos(char *cadena, int *pts, int *sign){
-    int x,p=0;
-    char cadena2[120];
-    strcpy(cadena2,cadena);
-    cadena2[pts[9]]='\0';
-    for(x=pts[8];x<strlen(cadena2);x++){
-        if(cadena2[x]!=':') {
-            cadena2[p] = cadena2[x];
-            p++;}
-    }
-    cadena2[p]='\0';
-    refe[*sign].criticos=atoi(cadena2);
-    return;}
-
-void lect(char *cadena, int *pts,int *id2,int *id){
-    int num,x,p=0;
-    int y=*id;
-    int r=*id2;
-    char variable[10],cadena2[256];
-    strcpy(cadena2,cadena);
-    cadena2[pts[1]]='\0';
-
-    for(x=0;x<strlen(cadena2);x++){
-        if(cadena2[x]=='#') {
-            p=x;}
-    }
-
-    for(x=p;x<strlen(cadena2);x++){
-        if(cadena2[x]!='#') {
-            variable[p] = cadena2[x];
-            p++;}
-    }
-    refe[y-1].info[r].lector=atoi(variable);
-    return;}
-
-void opinion(char *cadena, int *pts,int *id2,int *sign){
-    int x, p=0;
-    char variable[80],cadena2[81];
-    strcpy(cadena2, cadena);
-    cadena2[pts[2]] = '\0';
-    for (x = pts[1]; x < strlen(cadena2); x++) {
-        if (cadena[x] != ':') {
-            variable[p] = cadena2[x];
-            p++;}
-    }
-    variable[p]='\0';
-    strcpy(refe[*sign-1].info[*id2].opinion, variable);
-    return;}
-//IMPRIMIR--------------------------------------------
+void leer_info(char *cadena, char *texto,int pos){
+	int k, posicion, puntos=0;
+	
+	for(k=0;puntos<pos;k++){		//BUSCA EL INICIO DEL TEXTO EN LA CADENA
+		if(cadena[k]==':'||cadena[k]=='#') {posicion=k+1; puntos++;}
+	}
+	for(k=posicion;cadena[k]!=':';k++){
+		texto[k-posicion]=cadena[k];}	//PASA EL CONTENIDO DESEADO A TEXTO
+	texto[k-posicion]='\0';	
+	return;}
+/*****************************************************************************************************************************************************************************
+********************************************************************************IMPRIMIR**************************************************************************************
+*****************************************************************************************************************************************************************************/
 void imprimir(int linea){
     char *errores[]={
             /*0*/   "\nError de formato en un fichero: ?Linea mal formada en el fichero (NOMBRE_FICHERO)\n",
             /*1*/   "\nCaracter invalido\n",
             /*2*/   "\nCadena vacia\n",
-            /*3*/   "\nLongitud de cadena excesiva\n",
+            /*3*/   "\nLongitud de la cadena excesiva\n",
             /*4*/   "\nLector repetido\n",
             /*5*/ 	"\nValor seleccionado incorrecto\n",
             /*6*/ 	"\nOperacion imposible en este momento\n",
