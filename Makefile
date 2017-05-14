@@ -16,6 +16,3 @@ pantalla.o: pantalla.c pantalla.h
 
 biblioteca: biblioteca.c pantalla.o base_de_datos.o
 	    $(CC) biblioteca.c pantalla.o base_de_datos.o -o biblioteca
-
-clean:
-	rm -f base_de_datos *.o *~ *.bak
